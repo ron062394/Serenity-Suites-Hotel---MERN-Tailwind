@@ -20,13 +20,22 @@ function Header() {
     const handleCloseButtonClick = () => {
       setMenuOpen(false);
     }
+
+    const hadleCLickOutside = (event) => {
+      if (mobileMenu && !mobileMenu.contains(event.target) && !menuButton.contains(event.target) && !closeButton.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
   
     menuButton.addEventListener("click", handleMenuButtonClick);
     closeButton.addEventListener("click", handleCloseButtonClick);
+    document.addEventListener("click", hadleCLickOutside);
+    
 
     return () => {
       menuButton.removeEventListener("click", handleMenuButtonClick);
       closeButton.removeEventListener("click", handleCloseButtonClick);
+      document.removeEventListener("click", hadleCLickOutside);
     };
   
   }, []);
