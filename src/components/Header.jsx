@@ -97,15 +97,15 @@ function Header() {
                 {/* Navigation Menu List */}
                 <ul className='flex flex-col flex-grow space-y-6'>
                   <li><Link className='text-lg font-bold hover:text-gray-500' to={'/'}>Home</Link></li>
-                  <li><Link className='text-lg font-bold hover:text-gray-500' to={'/'}>Facilities</Link></li>
-                  <li><Link className='text-lg font-bold hover:text-gray-500' to={'/'}>Rooms</Link></li>
-                  <li><Link className='text-lg font-bold hover:text-gray-500' to={'/'}>Contact-us</Link></li>
+                  <li><Link className='text-lg font-bold hover:text-gray-500' to={'/facilities'}>Facilities</Link></li>
+                  <li><Link className='text-lg font-bold hover:text-gray-500' to={'/rooms'}>Rooms</Link></li>
+                  <li><Link className='text-lg font-bold hover:text-gray-500' to={'/contact-us'}>Contact-us</Link></li>
                 </ul>
 
                 {/* Buttons at the Bottom of the Mobile View */}
                 <div className='flex flex-col'>
-                  <Link>Log In</Link>
-                  <Link>Get Started</Link>
+                  <Link to={"/login"}>Log In</Link>
+                  <Link to={"/register"}>Get Started</Link>
                 </div>
               </nav>
 
@@ -117,9 +117,9 @@ function Header() {
           <nav className='hidden lg:flex flex-wrap items-center'>
             <ul className='flex items-center justify-center'>
               <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./"}>Home</Link></li>
-              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./"}>Facilities</Link></li>
-              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./"}>Rooms</Link></li>
-              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./"}>Contact-us</Link></li>
+              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./facilities"}>Facilities</Link></li>
+              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./rooms"}>Rooms</Link></li>
+              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./contact-us"}>Contact-us</Link></li>
             </ul>
           </nav>
 
@@ -127,10 +127,10 @@ function Header() {
           {/* Action Buttons */}
           <div className='hidden lg:flex flex-wrap -m-2'>
             <div className='w-full sm:w-auto p-2'>
-              <Link to="">Log In</Link>
+              <Link to="/login">Log In</Link>
             </div>
             <div className='w-full sm:w-auto p-2'>
-              <Link to="">Get Started</Link>
+              <Link to="/register">Get Started</Link>
             </div>
           </div>
 
