@@ -120,6 +120,51 @@ function HomePage() {
           </div>
         </div>
       </section>
+      
+      {/* About Us Section */}
+            <section id="about-us" className="py-16 bg-white">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">About Us</h2>
+          <p className="text-lg md:text-xl mb-6">
+            With decades of experience in hospitality, our hotel has a rich history of delivering world-class services and unforgettable experiences to guests from around the globe.
+          </p>
+          <Link to="/about" className="text-blue-500 hover:underline">Learn More</Link>
+        </div>
+      </section>
+
+            {/* Events and Conferences Section */}
+            <section id="events" className="py-16 bg-gray-100">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Events & Conferences</h2>
+          <p className="text-lg md:text-xl mb-6">
+            Our hotel offers state-of-the-art facilities for hosting events, conferences, and weddings. Let us help you make your next event a success.
+          </p>
+          <Link to="/events" className="text-blue-500 hover:underline">View Details</Link>
+        </div>
+      </section>
+
+            {/* Dining Section */}
+            <section id="dining" className="py-16 bg-white">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Dining & Cuisine</h2>
+          <p className="text-lg md:text-xl mb-6">
+            Indulge in a culinary journey at our on-site restaurants, offering a diverse range of cuisines crafted by world-renowned chefs.
+          </p>
+          <Link to="/dining" className="text-blue-500 hover:underline">Explore Dining</Link>
+        </div>
+      </section>
+
+      {/* Contact Us Section */}
+      <section id="contact-us" className="py-16 bg-gray-100">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Contact Us</h2>
+          <p className="text-lg md:text-xl mb-6">
+            Have questions or need assistance? Get in touch with us, and we’ll be happy to help with any inquiries you may have.
+          </p>
+          <Link to="/contact" className="text-blue-500 hover:underline">Get in Touch</Link>
+        </div>
+      </section>
+
     </div>
   );
 }
