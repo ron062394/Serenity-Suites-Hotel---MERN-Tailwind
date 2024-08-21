@@ -43,7 +43,7 @@ function Header() {
   }, []);
 
   return (
-    <header className='fixed top-0 left-0 w-full px-4 pt-6 z-50 bg-black bg-opacity-60'>
+    <header className='fixed top-0 left-0 w-full px-4 pt-6 z-50 bg-black bg-opacity-30'>
       <div className='container mx-auto'>
         <div className='flex items-center justify-between px-6 py-3.5'>
           <div>
@@ -119,7 +119,7 @@ function Header() {
             <div className='w-full sm:w-auto p-2'>
               <Link className='block w-full px-4 py-2.5 text-sm text-center font-bold hover:text-gray-300 text-white' to="/login">Log In</Link>
             </div>
-            <Link className="relative px-4 py-2 mb-5 text-sm font-bold text-[#0f1923] border-none bg-none cursor-pointer transition-all duration-150 ease-in-out group">
+            <Link className="relative px-4 py-2 mb-5 text-sm font-bold text-[#0f1923] border-none bg-none cursor-pointer transition-all duration-150 ease-in-out group" to={'/register'}>
               <span className="relative block px-5 py-2.5 text-white border border-gray-300 overflow-hidden shadow-inner">
                 <span className="relative z-10">Join Us</span>
                 <span className="absolute top-0 left-[-8px] bottom-[-1px] w-0 bg-[#ff4655] transform skew-x-[-15deg] transition-all duration-200 ease-in-out group-hover:w-[calc(100%+15px)]" />

@@ -8,6 +8,7 @@ import Facilities from './pages/user/Facilities';
 import Rooms from './pages/user/Rooms';
 import ContactUs from './pages/user/ContactUs';
 import './App.css';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             {/* Additional Routes */}
           </Routes>
         </main>
+        <Footer/>
       </Router>
     </div>
   );
