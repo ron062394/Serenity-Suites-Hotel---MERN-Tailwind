@@ -15,7 +15,7 @@ function Header() {
 
     const handleMenuButtonClick = () => {
       setMenuOpen(prevState => !prevState);
-    }
+    } 
   
     const handleCloseButtonClick = () => {
       setMenuOpen(false);
@@ -42,18 +42,21 @@ function Header() {
 
 
   return (
-    <header className='container mx-auto px-4'>
-      <div className='mb-12'>
+    <header className='container mx-auto px-4 pt-6'>
+      <div className=''>
         <div className='flex items-center justify-between px-6 py-3.5'>
           <div>
             <Link to={'/'}>
-              Logo here
+              <div className="font-serif text-2xl text-white">
+                <span className="italic">Serenity</span>
+                <span className="text-[#ff4655] italic">Suites</span>
+              </div>
             </Link> 
           </div>
 
 
           {/* Mobile Menu Button */}
-          <button className="lg:hidden text-gray-700"
+          <button className="lg:hidden text-white"
             aria-label='Open mobile menu'
             ref={menuButtonRef}
           >
@@ -116,10 +119,10 @@ function Header() {
           {/* Desktop Menu */}
           <nav className='hidden lg:flex flex-wrap items-center'>
             <ul className='flex items-center justify-center'>
-              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./"}>Home</Link></li>
-              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./facilities"}>Facilities</Link></li>
-              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./rooms"}>Rooms</Link></li>
-              <li className='mr-9'><Link className='inline-block text-sm font-bold text-gray-700 hover:text-gray-400' to={"./contact-us"}>Contact-us</Link></li>
+              <li className='mr-9'><Link className='inline-block text-s font-bold text-white hover:text-gray-400' to={"./"}>Home</Link></li>
+              <li className='mr-9'><Link className='inline-block text-s font-bold text-white hover:text-gray-400' to={"./facilities"}>Facilities</Link></li>
+              <li className='mr-9'><Link className='inline-block text-s font-bold text-white hover:text-gray-400' to={"./rooms"}>Rooms</Link></li>
+              <li className='mr-9'><Link className='inline-block text-s font-bold text-white hover:text-gray-400' to={"./contact-us"}>Contact-us</Link></li>
             </ul>
           </nav>
 
@@ -127,11 +130,14 @@ function Header() {
           {/* Action Buttons */}
           <div className='hidden lg:flex flex-wrap -m-2'>
             <div className='w-full sm:w-auto p-2'>
-              <Link to="/login">Log In</Link>
+              <Link className='block w-full px-4 py-2.5 text-sm text-center  font-bold   hover:text-gray-300 border border-gray-300 text-white' to="/login">Log In</Link>
             </div>
-            <div className='w-full sm:w-auto p-2'>
-              <Link to="/register">Get Started</Link>
-            </div>
+            <Link className="relative px-4 py-2 mb-5 text-sm font-bold uppercase text-[#0f1923] border-none bg-none cursor-pointer transition-all duration-150 ease-in-out group">
+              <span className="relative block px-5 py-2.5 text-white bg-[#0f1923] overflow-hidden shadow-inner">
+                <span className="relative z-10">Get Started</span>
+                <span className="absolute top-0 left-[-8px] bottom-[-1px] w-0 bg-[#ff4655] transform skew-x-[-15deg] transition-all duration-200 ease-in-out group-hover:w-[calc(100%+15px)]" />
+              </span>
+            </Link>
           </div>
 
 

@@ -13,23 +13,26 @@ import './App.css';
 
 function App() {
   return (
-    <div className="App container mx-auto">
-      <Router>
-        <Header/>
-        <Routes>
-          {/* User Routes */}
-          <Route path='/' element={<HomePage/>}></Route>
-          <Route path='/register' element={<UserSignup/>}></Route>
-          <Route path='/facilities' element={<Facilities/>}></Route>
-          <Route path='/login' element={<UserLogin/>}></Route>
-          <Route path='/rooms' element={<Rooms/>}></Route>
-          <Route path='/contact-us' element={<ContactUs/>}></Route>
+    <div className="App bg-black">
+      <div className=''>
+        <Router>
+          <Header/>
+          <Routes>
+            {/* User Routes */}
+            <Route path='/' element={<HomePage/>}></Route>
+            <Route path='/register' element={<UserSignup/>}></Route>
+            <Route path='/facilities' element={<Facilities/>}></Route>
+            <Route path='/login' element={<UserLogin/>}></Route>
+            <Route path='/rooms' element={<Rooms/>}></Route>
+            <Route path='/contact-us' element={<ContactUs/>}></Route>
 
 
-          {/* User Routes */}
+            {/* User Routes */}
 
-        </Routes>
-      </Router>
+          </Routes>
+        </Router>
+      </div>
+
     </div>
   );
 }
