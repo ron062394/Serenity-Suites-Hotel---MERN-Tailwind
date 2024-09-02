@@ -81,8 +81,13 @@ function Booking() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
-      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+    <div className="min-h-screen py-12 flex items-center justify-center" style={{
+      backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
+      <div className="max-w-3xl w-full mx-auto bg-white bg-opacity-90 shadow-xl rounded-lg overflow-hidden">
         <div className="bg-emerald-600 text-white py-4 px-6">
           <h1 className="text-3xl font-bold">Book Your Stay</h1>
         </div>

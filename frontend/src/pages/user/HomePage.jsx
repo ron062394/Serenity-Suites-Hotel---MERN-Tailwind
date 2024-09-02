@@ -186,7 +186,7 @@ function HomePage() {
                 Start Planning
               </Link>
             </div>
-            <img src="https://source.unsplash.com/random/800x600?luxury,event" alt="Luxury Event Space" className="rounded-lg shadow-lg" />
+            <img src="https://diamondhotel.com/wp-content/uploads/2024/02/diamond-hotel-ballroom-wedding-set-up.jpg" alt="Luxury Event Space" className="rounded-lg shadow-lg" />
           </div>
         </div>
       </section>

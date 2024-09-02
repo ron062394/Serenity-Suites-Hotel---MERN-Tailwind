@@ -23,11 +23,17 @@ function Dining() {
   };
 
   return (
-    <div className="bg-gray-50">
-      <section className="py-24">
+    <div className="bg-gray-50 relative" style={{
+      backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <section className="py-24 relative z-10">
         <div className="container mx-auto px-4">
           <motion.h1 
-            className="text-4xl font-bold mb-12 text-center text-emerald-800"
+            className="text-4xl font-bold mb-12 text-center text-white"
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
@@ -39,7 +45,7 @@ function Dining() {
             {diningOptions.map((option) => (
               <motion.div 
                 key={option.id} 
-                className="bg-white rounded-lg shadow-lg overflow-hidden"
+                className="bg-white bg-opacity-80 rounded-lg shadow-lg overflow-hidden"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -60,14 +66,14 @@ function Dining() {
         </div>
       </section>
 
-      <section className="py-24 bg-emerald-800 text-white">
+      <section className="py-24 bg-emerald-800 bg-opacity-80 text-white relative z-10">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-12 text-center">Culinary Experiences</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {culinaryExperiences.map((experience, index) => (
               <motion.div 
                 key={index}
-                className="bg-emerald-700 p-6 rounded-lg shadow-md text-center"
+                className="bg-emerald-700 bg-opacity-80 p-6 rounded-lg shadow-md text-center"
                 whileHover={{ y: -5 }}
               >
                 {experience.icon}
@@ -78,10 +84,10 @@ function Dining() {
         </div>
       </section>
 
-      <section className="py-24">
+      <section className="py-24 relative z-10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-8 text-emerald-800">Make a Reservation</h2>
-          <p className="text-xl mb-8 text-emerald-700">Secure your table at one of our exquisite dining venues.</p>
+          <h2 className="text-3xl font-bold mb-8 text-white">Make a Reservation</h2>
+          <p className="text-xl mb-8 text-white">Secure your table at one of our exquisite dining venues.</p>
           <Link to="/dining-reservation" className="inline-block px-8 py-3 text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
             Reserve Now
           </Link>

@@ -23,11 +23,16 @@ function Events() {
   };
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50" style={{
+      backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
       <section className="py-24">
         <div className="container mx-auto px-4">
           <motion.h1 
-            className="text-4xl font-bold mb-12 text-center text-emerald-800"
+            className="text-4xl font-bold mb-12 text-center text-white"
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
@@ -39,7 +44,7 @@ function Events() {
             {events.map((event) => (
               <motion.div 
                 key={event.id} 
-                className="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer"
+                className="bg-white bg-opacity-80 rounded-lg shadow-lg overflow-hidden cursor-pointer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleEventSelect(event)}
@@ -62,7 +67,7 @@ function Events() {
       </section>
 
       {selectedEvent && (
-        <section className="py-24 bg-emerald-100">
+        <section className="py-24 bg-emerald-100 bg-opacity-80">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-center text-emerald-800">Book {selectedEvent.name}</h2>
             <form className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
@@ -96,7 +101,7 @@ function Events() {
 
       <section className="py-24">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center text-emerald-800">Event Gallery</h2>
+          <h2 className="text-3xl font-bold mb-12 text-center text-white">Event Gallery</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(8)].map((_, index) => (
               <motion.div 

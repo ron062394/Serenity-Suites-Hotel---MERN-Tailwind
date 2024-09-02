@@ -16,11 +16,16 @@ function Rooms() {
   };
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50" style={{
+      backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
       <section className="py-24">
         <div className="container mx-auto px-4">
           <motion.h1 
-            className="text-4xl font-bold mb-12 text-center text-emerald-800"
+            className="text-4xl font-bold mb-12 text-center text-white"
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
@@ -31,7 +36,7 @@ function Rooms() {
             {rooms.map((room) => (
               <motion.div 
                 key={room.id} 
-                className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300"
+                className="bg-white bg-opacity-80 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
