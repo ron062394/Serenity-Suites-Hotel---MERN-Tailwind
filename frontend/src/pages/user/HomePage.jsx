@@ -8,7 +8,7 @@ function HomePage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const heroImages = [
     'url("https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg")',
-    'url("https://static.vecteezy.com/system/resources/previews/012/400/857/non_2x/recreational-tourism-landscape-luxurious-beach-resort-with-spa-swimming-pool-and-beach-chairs-or-leisure-loungers-under-umbrellas-with-palm-trees-sky-summer-travel-vacation-background-wellbeing-photo.jpg")',
+    'url("https://www.lifeandmoney.citi.com/rcs/v1/siteIds/lifeandmoney/asset/654b710a5837e2614c3262e8.jpg")',
     'url("https://image.architonic.com/prj2-3/20017680/brewin-design-office-executive-lounge-conrad-hotel-architonic-bdo-conradexecutivelounge-1-01-arcit18.jpg',
   ];
 

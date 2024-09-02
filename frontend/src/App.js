@@ -13,6 +13,15 @@ import Events from './pages/user/Events';
 import Dining from './pages/user/Dining';
 import Booking from './pages/user/Booking';
 
+// Admin imports
+import AdminDashboard from './pages/admin/AdminDashboard';
+import ManageRooms from './pages/admin/ManageRooms';
+import ManageBookings from './pages/admin/ManageBookings';
+import ManageUsers from './pages/admin/ManageUsers';
+import AdminLogin from './pages/admin/AdminLogin';
+
+
+
 function App() {
   return (
     <div className="App bg-black min-h-screen flex flex-col">
@@ -31,7 +40,13 @@ function App() {
             <Route path="/dining" element={<Dining />} />
             <Route path="/booking" element={<Booking />} />
             
-            {/* Additional Routes */}
+            {/* Admin Routes */}
+            <Route path="/admin/" element={<AdminDashboard />} />
+            <Route path="/admin/manage-rooms" element={<ManageRooms />} />
+            <Route path="/admin/manage-bookings" element={<ManageBookings />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/manage-users" element={<ManageUsers />} />
+
           </Routes>
         </main>
         <Footer/>
