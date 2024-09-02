@@ -23,76 +23,78 @@ function Dining() {
   };
 
   return (
-    <div className="bg-gray-50 relative" style={{
-      backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed'
-    }}>
+    <div className="relative">
+      <div className="absolute inset-0 bg-cover bg-center bg-fixed transition-all duration-1000 ease-in-out"
+        style={{
+          backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
+        }}
+      ></div>
       <div className="absolute inset-0 bg-black opacity-50"></div>
-      <section className="py-24 relative z-10">
-        <div className="container mx-auto px-4">
-          <motion.h1 
-            className="text-4xl font-bold mb-12 text-center text-white"
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-          >
-            Culinary Delights at Serenity Suites
-          </motion.h1>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {diningOptions.map((option) => (
-              <motion.div 
-                key={option.id} 
-                className="bg-white bg-opacity-80 rounded-lg shadow-lg overflow-hidden"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <img src={option.image} alt={option.name} className="w-full h-64 object-cover" />
-                <div className="p-6">
-                  <div className="flex items-center mb-2">
-                    {option.icon}
-                    <h2 className="text-2xl font-semibold ml-2 text-emerald-800">{option.name}</h2>
+      <div className="relative z-10">
+        <section className="py-24">
+          <div className="container mx-auto px-4">
+            <motion.h1 
+              className="text-4xl font-bold mb-12 text-center text-white"
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+            >
+              Culinary Delights at Serenity Suites
+            </motion.h1>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {diningOptions.map((option) => (
+                <motion.div 
+                  key={option.id} 
+                  className="bg-white bg-opacity-80 rounded-lg shadow-lg overflow-hidden"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <img src={option.image} alt={option.name} className="w-full h-64 object-cover" />
+                  <div className="p-6">
+                    <div className="flex items-center mb-2">
+                      {option.icon}
+                      <h2 className="text-2xl font-semibold ml-2 text-emerald-800">{option.name}</h2>
+                    </div>
+                    <p className="text-emerald-700 mb-4">{option.description}</p>
+                    <Link to={`/dining/${option.id}`} className="inline-block px-6 py-2 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+                      Learn More
+                    </Link>
                   </div>
-                  <p className="text-emerald-700 mb-4">{option.description}</p>
-                  <Link to={`/dining/${option.id}`} className="inline-block px-6 py-2 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105">
-                    Learn More
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="py-24 bg-emerald-800 bg-opacity-80 text-white relative z-10">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">Culinary Experiences</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {culinaryExperiences.map((experience, index) => (
-              <motion.div 
-                key={index}
-                className="bg-emerald-700 bg-opacity-80 p-6 rounded-lg shadow-md text-center"
-                whileHover={{ y: -5 }}
-              >
-                {experience.icon}
-                <h3 className="text-xl font-semibold mt-4">{experience.name}</h3>
-              </motion.div>
-            ))}
+        <section className="py-24 bg-emerald-800 bg-opacity-80 text-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-12 text-center">Culinary Experiences</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {culinaryExperiences.map((experience, index) => (
+                <motion.div 
+                  key={index}
+                  className="bg-emerald-700 bg-opacity-80 p-6 rounded-lg shadow-md text-center"
+                  whileHover={{ y: -5 }}
+                >
+                  {experience.icon}
+                  <h3 className="text-xl font-semibold mt-4">{experience.name}</h3>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="py-24 relative z-10">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-8 text-white">Make a Reservation</h2>
-          <p className="text-xl mb-8 text-white">Secure your table at one of our exquisite dining venues.</p>
-          <Link to="/dining-reservation" className="inline-block px-8 py-3 text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
-            Reserve Now
-          </Link>
-        </div>
-      </section>
+        <section className="py-24">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl font-bold mb-8 text-white">Make a Reservation</h2>
+            <p className="text-xl mb-8 text-white">Secure your table at one of our exquisite dining venues.</p>
+            <Link to="/dining-reservation" className="inline-block px-8 py-3 text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+              Reserve Now
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
