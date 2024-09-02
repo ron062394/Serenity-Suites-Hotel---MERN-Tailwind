@@ -37,69 +37,78 @@ function RoomDetails() {
   };
 
   if (!room) {
-    return <div className="text-center py-12">Loading...</div>;
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
-      <div className="container mx-auto px-4">
-        <motion.h1 
-          className="text-4xl font-bold mb-8 text-emerald-800"
-          initial="hidden"
-          animate="visible"
-          variants={fadeInUp}
-        >
-          {room.name}
-        </motion.h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <motion.div 
-            className="space-y-6"
+    <div className="bg-gray-50 relative">
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-fixed"
+        style={{
+          backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
+        }}
+      ></div>
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="relative z-10">
+        <div className="container mx-auto px-4 py-24">
+          <motion.h1 
+            className="text-4xl font-bold mb-12 text-white text-center"
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
           >
-            <img src={room.images[0]} alt={room.name} className="w-full h-96 object-cover rounded-lg shadow-lg" />
-            <div className="grid grid-cols-3 gap-4">
-              {room.images.slice(1).map((image, index) => (
-                <img key={index} src={image} alt={`${room.name} ${index + 2}`} className="w-full h-32 object-cover rounded-lg shadow-md" />
-              ))}
-            </div>
-          </motion.div>
+            {room.name}
+          </motion.h1>
 
-          <motion.div 
-            className="space-y-6"
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-          >
-            <p className="text-xl text-emerald-700">{room.description}</p>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-semibold mb-4 text-emerald-800">Room Details</h2>
-              <ul className="space-y-2 text-emerald-700">
-                <li>Price: ${room.price} per night</li>
-                <li>Capacity: {room.capacity} guests</li>
-                <li>Size: {room.size}</li>
-              </ul>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-semibold mb-4 text-emerald-800">Amenities</h2>
-              <ul className="grid grid-cols-2 gap-4">
-                {room.amenities.map((amenity, index) => (
-                  <li key={index} className="flex items-center text-emerald-700">
-                    {getAmenityIcon(amenity)}
-                    <span className="ml-2">{amenity}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <Link 
-              to="/booking" 
-              className="inline-block px-8 py-3 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <motion.div 
+              className="space-y-6"
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
             >
-              Book Now
-            </Link>
-          </motion.div>
+              <img src={room.images[0]} alt={room.name} className="w-full h-96 object-cover rounded-lg shadow-lg" />
+              <div className="grid grid-cols-3 gap-4">
+                {room.images.slice(1).map((image, index) => (
+                  <img key={index} src={image} alt={`${room.name} ${index + 2}`} className="w-full h-32 object-cover rounded-lg shadow-md" />
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="space-y-6"
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+            >
+              <p className="text-xl text-white">{room.description}</p>
+              <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-md">
+                <h2 className="text-2xl font-semibold mb-4 text-emerald-800">Room Details</h2>
+                <ul className="space-y-2 text-emerald-700">
+                  <li>Price: ${room.price} per night</li>
+                  <li>Capacity: {room.capacity} guests</li>
+                  <li>Size: {room.size}</li>
+                </ul>
+              </div>
+              <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-md">
+                <h2 className="text-2xl font-semibold mb-4 text-emerald-800">Amenities</h2>
+                <ul className="grid grid-cols-2 gap-4">
+                  {room.amenities.map((amenity, index) => (
+                    <li key={index} className="flex items-center text-emerald-700">
+                      {getAmenityIcon(amenity)}
+                      <span className="ml-2">{amenity}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Link 
+                to="/booking" 
+                className="inline-block px-8 py-3 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105"
+              >
+                Book Now
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>

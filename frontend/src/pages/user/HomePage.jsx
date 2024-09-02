@@ -77,9 +77,9 @@ function HomePage() {
           <h2 className="text-4xl font-bold mb-12 text-center text-emerald-800">Exquisite Accommodations</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
-              { name: 'Royal Suite', description: 'Indulge in opulence with panoramic views', icon: <FaCocktail /> },
-              { name: 'Zen Garden Room', description: 'Find peace in nature-inspired luxury', icon: <MdLocalFlorist /> },
-              { name: 'Skyline Penthouse', description: 'Experience urban elegance at its finest', icon: <FaConciergeBell /> },
+              { name: 'Royal Suite', description: 'Indulge in opulence with panoramic views', icon: <FaCocktail />, image: 'https://www.theplazany.com/wp-content/uploads/2016/02/DSC_3020-scaled.jpg' },
+              { name: 'Zen Garden Room', description: 'Find peace in nature-inspired luxury', icon: <MdLocalFlorist />, image: 'https://spacesmag.com/wp-content/uploads/2022/02/46.webp' },
+              { name: 'Skyline Penthouse', description: 'Experience urban elegance at its finest', icon: <FaConciergeBell />, image: 'https://image-tc.galaxy.tf/wijpeg-b87cxl0q3gmcsm0jrbnnfwkvb/web-nylo-king-city-view-1_standard.jpg?crop=106%2C0%2C1688%2C1266' },
             ].map((room, index) => (
               <motion.div 
                 key={index} 
@@ -87,7 +87,7 @@ function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <img src={`https://source.unsplash.com/random/800x600?luxury,hotel,room${index+1}`} alt={room.name} className="w-full h-64 object-cover" />
+                <img src={room.image} alt={room.name} className="w-full h-64 object-cover" />
                 <div className="p-6">
                   <div className="flex items-center mb-2">
                     {room.icon}
