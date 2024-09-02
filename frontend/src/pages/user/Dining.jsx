@@ -1,0 +1,94 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { MdRestaurant, MdLocalBar, MdRoomService } from 'react-icons/md';
+import { FaWineGlassAlt, FaCocktail, FaUtensilSpoon } from 'react-icons/fa';
+
+function Dining() {
+  const diningOptions = [
+    { id: 1, name: 'Gourmet Restaurant', description: 'Experience fine dining with our Michelin-starred chefs.', icon: <MdRestaurant />, image: 'https://source.unsplash.com/random/800x600?gourmet,restaurant' },
+    { id: 2, name: 'Rooftop Bar', description: 'Enjoy breathtaking views with handcrafted cocktails.', icon: <MdLocalBar />, image: 'https://source.unsplash.com/random/800x600?rooftop,bar' },
+    { id: 3, name: 'In-Room Dining', description: 'Savor exquisite meals in the comfort of your room.', icon: <MdRoomService />, image: 'https://source.unsplash.com/random/800x600?room,service' },
+  ];
+
+  const culinaryExperiences = [
+    { icon: <FaWineGlassAlt />, name: 'Wine Tasting' },
+    { icon: <FaCocktail />, name: 'Mixology Classes' },
+    { icon: <FaUtensilSpoon />, name: 'Cooking Workshops' },
+  ];
+
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <div className="bg-gray-50">
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <motion.h1 
+            className="text-4xl font-bold mb-12 text-center text-emerald-800"
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+          >
+            Culinary Delights at Serenity Suites
+          </motion.h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {diningOptions.map((option) => (
+              <motion.div 
+                key={option.id} 
+                className="bg-white rounded-lg shadow-lg overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <img src={option.image} alt={option.name} className="w-full h-64 object-cover" />
+                <div className="p-6">
+                  <div className="flex items-center mb-2">
+                    {option.icon}
+                    <h2 className="text-2xl font-semibold ml-2 text-emerald-800">{option.name}</h2>
+                  </div>
+                  <p className="text-emerald-700 mb-4">{option.description}</p>
+                  <Link to={`/dining/${option.id}`} className="inline-block px-6 py-2 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    Learn More
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-emerald-800 text-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12 text-center">Culinary Experiences</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {culinaryExperiences.map((experience, index) => (
+              <motion.div 
+                key={index}
+                className="bg-emerald-700 p-6 rounded-lg shadow-md text-center"
+                whileHover={{ y: -5 }}
+              >
+                {experience.icon}
+                <h3 className="text-xl font-semibold mt-4">{experience.name}</h3>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-8 text-emerald-800">Make a Reservation</h2>
+          <p className="text-xl mb-8 text-emerald-700">Secure your table at one of our exquisite dining venues.</p>
+          <Link to="/dining-reservation" className="inline-block px-8 py-3 text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+            Reserve Now
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default Dining;

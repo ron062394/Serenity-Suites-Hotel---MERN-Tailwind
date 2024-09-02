@@ -9,6 +9,9 @@ import Rooms from './pages/user/Rooms';
 import ContactUs from './pages/user/ContactUs';
 import './App.css';
 import Footer from './components/Footer';
+import Events from './pages/user/Events';
+import Dining from './pages/user/Dining';
+import Booking from './pages/user/Booking';
 
 function App() {
   return (
@@ -24,6 +27,10 @@ function App() {
             <Route path="/login" element={<UserLogin />} />
             <Route path="/rooms" element={<Rooms />} />
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/dining" element={<Dining />} />
+            <Route path="/booking" element={<Booking />} />
+            
             {/* Additional Routes */}
           </Routes>
         </main>
