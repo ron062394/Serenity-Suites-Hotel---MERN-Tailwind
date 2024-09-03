@@ -42,6 +42,18 @@ function HomePage() {
     setGalleryIndex((prevIndex) => (prevIndex + 1) % galleryImages.length);
   };
 
+  const getGalleryDescription = (index) => {
+    const descriptions = [
+      { title: "Luxurious Suites", description: "Experience unparalleled comfort in our meticulously designed suites. Each room is a sanctuary of elegance, featuring plush furnishings, state-of-the-art amenities, and breathtaking views. Our suites blend modern luxury with timeless sophistication to ensure an unforgettable stay." },
+      { title: "Elegant Interiors", description: "Immerse yourself in the sophisticated ambiance of our hotel. From the grand lobby to the intimate lounges, every space is thoughtfully curated with exquisite artwork, custom furnishings, and opulent decor. The harmonious blend of colors and textures creates an atmosphere of refined luxury." },
+      { title: "Panoramic Views", description: "Enjoy breathtaking vistas from our strategically located rooms. Wake up to stunning cityscapes or serene natural landscapes that change with the light throughout the day. Our floor-to-ceiling windows and private balconies offer unobstructed views that serve as a constant reminder of your extraordinary surroundings." },
+      { title: "Rejuvenating Spa", description: "Indulge in relaxation at our world-class spa facilities. Our expert therapists offer a range of treatments inspired by ancient healing traditions and modern wellness techniques. From soothing massages to rejuvenating facials, each treatment is designed to restore balance to your body and mind." },
+      { title: "Lush Gardens", description: "Stroll through our beautifully landscaped gardens for a serene escape. Meander along winding paths, discover hidden nooks, and breathe in the fragrance of exotic flowers. Our gardens provide a tranquil oasis where you can reconnect with nature and find moments of peace amidst your travels." },
+      { title: "Exquisite Dining", description: "Savor culinary delights at our gourmet restaurants. Our world-renowned chefs craft innovative menus using the finest local and international ingredients. From intimate fine dining experiences to casual al fresco meals, each restaurant offers a unique ambiance and a commitment to gastronomic excellence." }
+    ];
+    return descriptions[index];
+  };
+
   return (
     <div className="bg-gray-50">
       <section id="hero" className="relative h-[80vh] overflow-hidden bg-cover bg-center transition-all duration-1000 ease-in-out"
@@ -168,31 +180,61 @@ function HomePage() {
       </section>
 
       <section id="hotel-gallery" className="py-24 bg-gradient-to-r from-amber-400 to-amber-600 text-white">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12">Experience Luxury</h2>
-          <div className="relative w-full max-w-4xl mx-auto overflow-hidden">
-            <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${galleryIndex * 33.33}%)` }}>
-              {galleryImages.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Hotel Image ${index + 1}`}
-                  className="w-1/3 h-96 object-cover flex-shrink-0"
-                />
-              ))}
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold mb-12 text-center">Experience Unparalleled Luxury</h2>
+          <div className="flex items-center">
+            <div className="relative w-2/3 overflow-hidden rounded-lg shadow-xl">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out" 
+                style={{ transform: `translateX(-${galleryIndex * 100}%)` }}
+              >
+                {galleryImages.map((image, index) => (
+                  <div key={index} className="w-full flex-shrink-0">
+                    <img
+                      src={image}
+                      alt={`Luxurious Hotel View ${index + 1}`}
+                      className="w-full h-[500px] object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+              <button 
+                className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white text-amber-600 p-3 rounded-full opacity-75 hover:opacity-100 transition-opacity duration-300"
+                onClick={handlePrevGallery}
+                aria-label="Previous image"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button 
+                className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white text-amber-600 p-3 rounded-full opacity-75 hover:opacity-100 transition-opacity duration-300"
+                onClick={handleNextGallery}
+                aria-label="Next image"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             </div>
-            <button 
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full"
-              onClick={handlePrevGallery}
-            >
-              &lt;
-            </button>
-            <button 
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full"
-              onClick={handleNextGallery}
-            >
-              &gt;
-            </button>
+            <div className="w-1/3 pl-8">
+              <h3 className="text-2xl font-semibold mb-4">
+                {getGalleryDescription(galleryIndex).title}
+              </h3>
+              <p className="text-lg">
+                {getGalleryDescription(galleryIndex).description}
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 flex justify-center space-x-2">
+            {galleryImages.map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full ${index === galleryIndex ? 'bg-white' : 'bg-white bg-opacity-50'}`}
+                onClick={() => setGalleryIndex(index)}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -220,13 +262,15 @@ function HomePage() {
       </section>
 
       <section id="dining" className="py-24 bg-emerald-800 text-white">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12">Culinary Delights</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <img src="https://media.istockphoto.com/id/1446478827/photo/a-chef-is-cooking-in-his-restaurants-kitchen.jpg?s=612x612&w=0&k=20&c=jwKJmGErrLe2XsTWNYEEyiNicudYVA4j8jvnTiJdp58=" alt="Gourmet Dining" className="rounded-lg shadow-lg" />
-            <div>
-              <MdRestaurant className="text-6xl mb-6 mx-auto text-amber-400" />
-              <p className="text-xl mb-8">Embark on a gastronomic journey with our Michelin-starred chefs and sommelier-curated wine list.</p>
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold mb-8 text-center">Culinary Delights</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <img src="https://media.istockphoto.com/id/1446478827/photo/a-chef-is-cooking-in-his-restaurants-kitchen.jpg?s=612x612&w=0&k=20&c=jwKJmGErrLe2XsTWNYEEyiNicudYVA4j8jvnTiJdp58=" alt="Gourmet Dining" className="rounded-lg shadow-lg w-full h-auto" />
+            <div className="flex flex-col items-center md:items-start">
+              <MdRestaurant className="text-6xl mb-4 text-amber-400" />
+              <p className="text-lg mb-6 text-justify">
+                Embark on a gastronomic journey at Serenity Suites, where culinary excellence meets unparalleled luxury. Our Michelin-starred chefs craft exquisite dishes that tantalize the taste buds and ignite the senses. From farm-fresh local ingredients to exotic flavors from around the world, every meal is a masterpiece. Complement your dining experience with selections from our sommelier-curated wine list, featuring rare vintages and boutique labels. Whether you're savoring a romantic dinner for two or hosting a grand celebration, our diverse dining venues offer the perfect ambiance for every occasion.
+              </p>
               <Link to="/dining" className="inline-block px-8 py-3 text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
                 Reserve Your Table
               </Link>
