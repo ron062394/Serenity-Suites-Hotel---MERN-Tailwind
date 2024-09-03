@@ -103,26 +103,48 @@ function HomePage() {
           </div>
         </div>
       </section>
-
       <section id="amenities" className="py-24 bg-emerald-100">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center text-emerald-800">World-Class Amenities</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: <FaWifi className="text-4xl mb-4 text-amber-500" />, name: 'High-Speed Wi-Fi' },
-              { icon: <FaSwimmingPool className="text-4xl mb-4 text-amber-500" />, name: 'Infinity Pool' },
-              { icon: <FaDumbbell className="text-4xl mb-4 text-amber-500" />, name: 'State-of-the-Art Gym' },
-              { icon: <MdSpa className="text-4xl mb-4 text-amber-500" />, name: 'Rejuvenating Spa' },
-            ].map((amenity, index) => (
-              <motion.div 
-                key={index} 
-                className="bg-white p-6 rounded-lg shadow-md text-center"
-                whileHover={{ y: -5 }}
-              >
-                {amenity.icon}
-                <h3 className="text-xl font-semibold text-emerald-800">{amenity.name}</h3>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-4 gap-4">
+            <motion.div 
+              className="col-span-2 row-span-2 bg-white rounded-lg shadow-md overflow-hidden"
+              whileHover={{ scale: 1.05 }}
+            >
+              <img src="https://cdn.boatinternational.com/files/2021/01/37a84f40-51c0-11eb-a5c0-7f6de4783497-grace-hotel-santorini-infinity-pool.jpg" alt="Infinity Pool" className="w-full  object-cover" />
+              <div className="p-6">
+                <FaSwimmingPool className="text-4xl mb-4 text-amber-500" />
+                <h3 className="text-2xl font-semibold text-emerald-800">Infinity Pool</h3>
+                <p className="mt-2 text-emerald-600">Swim in luxury with breathtaking views</p>
+              </div>
+            </motion.div>
+            <motion.div 
+              className="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"
+              whileHover={{ scale: 1.05 }}
+            >
+              <FaWifi className="text-4xl mb-4 text-amber-500" />
+              <h3 className="text-xl font-semibold text-emerald-800">High-Speed Wi-Fi</h3>
+              <p className="mt-2 text-emerald-600">Stay connected everywhere</p>
+            </motion.div>
+            <motion.div 
+              className="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between"
+              whileHover={{ scale: 1.05 }}
+            >
+              <FaDumbbell className="text-4xl mb-4 text-amber-500" />
+              <h3 className="text-xl font-semibold text-emerald-800">State-of-the-Art Gym</h3>
+              <p className="mt-2 text-emerald-600">Maintain your fitness routine</p>
+            </motion.div>
+            <motion.div 
+              className="col-span-2 bg-white rounded-lg shadow-md overflow-hidden"
+              whileHover={{ scale: 1.05 }}
+            >
+              <img src="https://sequoiamanilabay.com/wp-content/uploads/2018/08/services-1.jpg" alt="Rejuvenating Spa" className="w-full h-72 object-cover" />
+              <div className="p-6">
+                <MdSpa className="text-4xl mb-4 text-amber-500" />
+                <h3 className="text-xl font-semibold text-emerald-800">Rejuvenating Spa</h3>
+                <p className="mt-2 text-emerald-600">Indulge in relaxation and wellness</p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -163,7 +185,7 @@ function HomePage() {
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold mb-12">Culinary Delights</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <img src="https://source.unsplash.com/random/800x600?gourmet,restaurant" alt="Gourmet Dining" className="rounded-lg shadow-lg" />
+            <img src="https://media.istockphoto.com/id/1446478827/photo/a-chef-is-cooking-in-his-restaurants-kitchen.jpg?s=612x612&w=0&k=20&c=jwKJmGErrLe2XsTWNYEEyiNicudYVA4j8jvnTiJdp58=" alt="Gourmet Dining" className="rounded-lg shadow-lg" />
             <div>
               <MdRestaurant className="text-6xl mb-6 mx-auto text-amber-400" />
               <p className="text-xl mb-8">Embark on a gastronomic journey with our Michelin-starred chefs and sommelier-curated wine list.</p>
