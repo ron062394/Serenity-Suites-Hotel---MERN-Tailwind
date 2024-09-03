@@ -266,18 +266,21 @@ function HomePage() {
           <h2 className="text-4xl font-bold mb-12 text-center text-emerald-800">Our Commitment to Sustainability</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: <FaLeaf className="text-4xl mb-4 text-emerald-500" />, title: 'Eco-Friendly Practices', description: 'We implement green initiatives to reduce our environmental impact.' },
-              { icon: <MdLocalFlorist className="text-4xl mb-4 text-emerald-500" />, title: 'Local Sourcing', description: 'We support local communities by sourcing products and ingredients locally.' },
-              { icon: <FaGlobe className="text-4xl mb-4 text-emerald-500" />, title: 'Carbon Neutral', description: 'We offset our carbon footprint through various environmental projects.' },
+              { icon: <FaLeaf className="text-5xl mb-4 text-emerald-500" />, title: 'Eco-Friendly Practices', description: 'We implement innovative green initiatives to significantly reduce our environmental footprint.', link: '/eco-practices' },
+              { icon: <MdLocalFlorist className="text-5xl mb-4 text-emerald-500" />, title: 'Local Sourcing', description: 'We actively support and empower local communities by prioritizing local products and ingredients.', link: '/local-sourcing' },
+              { icon: <FaGlobe className="text-5xl mb-4 text-emerald-500" />, title: 'Carbon Neutral', description: "We're committed to carbon neutrality through investments in verified environmental conservation projects.", link: '/carbon-neutral' }
             ].map((item, index) => (
               <motion.div 
                 key={index}
-                className="bg-emerald-50 p-6 rounded-lg shadow-md text-center"
-                whileHover={{ y: -5 }}
+                className="bg-emerald-50 p-8 rounded-lg shadow-lg text-center transition-all duration-300"
+                whileHover={{ y: -10, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)' }}
               >
                 {item.icon}
-                <h3 className="text-xl font-semibold text-emerald-800 mb-2">{item.title}</h3>
-                <p className="text-emerald-700">{item.description}</p>
+                <h3 className="text-2xl font-semibold text-emerald-800 mb-3">{item.title}</h3>
+                <p className="text-emerald-700 mb-4">{item.description}</p>
+                <Link to={item.link} className="inline-block px-6 py-2 text-sm font-medium text-white bg-emerald-600 rounded-full hover:bg-emerald-700 transition-colors duration-300">
+                  Learn More
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -286,23 +289,34 @@ function HomePage() {
 
       <section id="additional-services" className="py-24 bg-emerald-800 text-white">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold mb-12 text-center">Additional Services</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: <FaShuttleVan className="text-4xl mb-4 text-amber-400" />, name: 'Airport Shuttle' },
-              { icon: <MdPets className="text-4xl mb-4 text-amber-400" />, name: 'Pet-Friendly Rooms' },
-              { icon: <MdChildCare className="text-4xl mb-4 text-amber-400" />, name: 'Childcare Services' },
-              { icon: <MdSecurity className="text-4xl mb-4 text-amber-400" />, name: '24/7 Security' },
-            ].map((service, index) => (
-              <motion.div 
-                key={index}
-                className="bg-emerald-700 p-6 rounded-lg shadow-md text-center"
-                whileHover={{ y: -5 }}
-              >
-                {service.icon}
-                <h3 className="text-xl font-semibold">{service.name}</h3>
-              </motion.div>
-            ))}
+          <h2 className="text-4xl font-bold mb-12 text-center">Exclusive Amenities</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="aspect-w-16 aspect-h-9">
+              <img 
+                src="https://www.hoteldive.com/imgproxy/A8W9Zu1Xgyx2pPQYEqSJ7AiT3sIVzu4_9djHqhTxbhc/g:ce/rs:fill:1200:675:1/bG9jYWw6Ly8vZGl2ZWltYWdlL0dldHR5SW1hZ2VzLTEzODc2MjEwMzIuanBn.webp" 
+                alt="Luxury Hotel Amenities" 
+                className="object-cover w-full h-full rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              {[
+                { icon: <FaShuttleVan className="text-4xl mb-4 text-amber-400" />, name: 'Airport Shuttle', description: 'Complimentary transfers' },
+                { icon: <MdPets className="text-4xl mb-4 text-amber-400" />, name: 'Pet-Friendly Rooms', description: 'Welcoming to furry friends' },
+                { icon: <MdChildCare className="text-4xl mb-4 text-amber-400" />, name: 'Childcare Services', description: 'Professional care for kids' },
+                { icon: <MdSecurity className="text-4xl mb-4 text-amber-400" />, name: '24/7 Security', description: 'Round-the-clock protection' },
+              ].map((service, index) => (
+                <motion.div 
+                  key={index}
+                  className="bg-emerald-700 p-6 rounded-lg shadow-md"
+                  whileHover={{ scale: 1.05, boxShadow: '0 10px 20px rgba(0,0,0,0.2)' }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  {service.icon}
+                  <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
+                  <p className="text-emerald-200">{service.description}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
