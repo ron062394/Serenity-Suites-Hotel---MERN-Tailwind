@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
+  const [activeTab, setActiveTab] = useState('admin');
 
   useEffect(() => {
     // Fetch users from API
@@ -27,9 +28,25 @@ function ManageUsers() {
     }
   };
 
+  const filteredUsers = users.filter(user => user.role.toLowerCase() === activeTab);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6 text-emerald-800">Manage Users</h1>
+      <div className="mb-6">
+        <button
+          className={`px-4 py-2 rounded-l-md ${activeTab === 'admin' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+          onClick={() => setActiveTab('admin')}
+        >
+          Admins
+        </button>
+        <button
+          className={`px-4 py-2 rounded-r-md ${activeTab === 'customer' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+          onClick={() => setActiveTab('customer')}
+        >
+          Customers
+        </button>
+      </div>
       <Link to="/admin/users/new" className="inline-block mb-4 px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors">
         <FaUserPlus className="inline-block mr-2" />
         Add New User
@@ -49,7 +66,7 @@ function ManageUsers() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <motion.tr 
                 key={user.id}
                 whileHover={{ backgroundColor: '#f0fdf4' }}

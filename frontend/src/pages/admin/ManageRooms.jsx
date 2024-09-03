@@ -3,11 +3,21 @@ import { motion } from 'framer-motion';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
 function ManageRooms() {
-  const [rooms, setRooms] = useState([
-    { id: 1, number: '101', type: 'Standard', capacity: 2, price: 100 },
-    { id: 2, number: '201', type: 'Deluxe', capacity: 3, price: 150 },
-    { id: 3, number: '301', type: 'Suite', capacity: 4, price: 200 },
-  ]);
+  const [activeFloor, setActiveFloor] = useState(1);
+  const [rooms, setRooms] = useState({
+    1: [
+      { id: 101, number: '101', type: 'Standard', capacity: 2, price: 100 },
+      { id: 102, number: '102', type: 'Deluxe', capacity: 3, price: 150 },
+    ],
+    2: [
+      { id: 201, number: '201', type: 'Suite', capacity: 4, price: 200 },
+      { id: 202, number: '202', type: 'Standard', capacity: 2, price: 100 },
+    ],
+    3: [
+      { id: 301, number: '301', type: 'Deluxe', capacity: 3, price: 150 },
+      { id: 302, number: '302', type: 'Suite', capacity: 4, price: 200 },
+    ],
+  });
 
   const handleEdit = (id) => {
     console.log(`Edit room ${id}`);
@@ -34,6 +44,23 @@ function ManageRooms() {
       variants={fadeInUp}
     >
       <h2 className="text-3xl font-bold mb-6 text-emerald-800">Manage Rooms</h2>
+      <div className="mb-6">
+        <div className="flex space-x-2">
+          {Object.keys(rooms).map((floor) => (
+            <button
+              key={floor}
+              className={`px-4 py-2 rounded-md ${
+                activeFloor === parseInt(floor)
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              onClick={() => setActiveFloor(parseInt(floor))}
+            >
+              Floor {floor}
+            </button>
+          ))}
+        </div>
+      </div>
       <motion.button
         className="mb-4 bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors duration-300 flex items-center"
         onClick={handleAddRoom}
@@ -54,7 +81,7 @@ function ManageRooms() {
             </tr>
           </thead>
           <tbody>
-            {rooms.map((room) => (
+            {rooms[activeFloor].map((room) => (
               <motion.tr 
                 key={room.id}
                 className="border-b border-gray-200 hover:bg-gray-100"

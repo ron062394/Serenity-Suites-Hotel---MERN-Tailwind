@@ -12,6 +12,16 @@ function HomePage() {
     'url("https://image.architonic.com/prj2-3/20017680/brewin-design-office-executive-lounge-conrad-hotel-architonic-bdo-conradexecutivelounge-1-01-arcit18.jpg',
   ];
 
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const galleryImages = [
+    'https://www.travelandleisure.com/thmb/uWwv2wR4LeMCGRUgvpz8MKAzuyk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/wynn-las-vegas-encore-three-bed-duplex-LUXESUITE0122-6c1cafc69be04401a975bd7edb7a1e84.jpg',
+    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/95/0d/90/le-rapp-hotel.jpg?w=1200&h=-1&s=1',
+    'https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_nuit_v2-scaled.jpg',
+    'https://media-magazine.trivago.com/wp-content/uploads/2015/06/07134522/spa-hotels-in-london-the-mondrian-treatment-room.jpeg',
+    'https://galeriemagazine.com/wp-content/uploads/2020/09/le-bristol-paris-jardin_COVER.jpg',
+    'https://media.licdn.com/dms/image/D4D12AQHv91WGkGrwew/article-cover_image-shrink_720_1280/0/1680587500469?e=2147483647&v=beta&t=zxpVEh3FhM-S8DoQa22T-silfvOJzXbbshwv-sO0D8k'
+  ];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
@@ -22,6 +32,14 @@ function HomePage() {
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
+  };
+
+  const handlePrevGallery = () => {
+    setGalleryIndex((prevIndex) => (prevIndex - 1 + galleryImages.length) % galleryImages.length);
+  };
+
+  const handleNextGallery = () => {
+    setGalleryIndex((prevIndex) => (prevIndex + 1) % galleryImages.length);
   };
 
   return (
@@ -149,13 +167,33 @@ function HomePage() {
         </div>
       </section>
 
-      <section id="special-offers" className="py-24 bg-gradient-to-r from-amber-400 to-amber-600 text-white">
+      <section id="hotel-gallery" className="py-24 bg-gradient-to-r from-amber-400 to-amber-600 text-white">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8">Exclusive Experiences</h2>
-          <p className="text-xl mb-12">Unlock extraordinary moments with our curated packages</p>
-          <Link to="/special-offers" className="inline-block px-8 py-3 text-lg font-semibold text-amber-600 bg-white rounded-md shadow-lg hover:bg-amber-50 transition-all duration-300 ease-in-out transform hover:scale-105">
-            Discover More
-          </Link>
+          <h2 className="text-4xl font-bold mb-12">Experience Luxury</h2>
+          <div className="relative w-full max-w-4xl mx-auto overflow-hidden">
+            <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${galleryIndex * 33.33}%)` }}>
+              {galleryImages.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Hotel Image ${index + 1}`}
+                  className="w-1/3 h-96 object-cover flex-shrink-0"
+                />
+              ))}
+            </div>
+            <button 
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full"
+              onClick={handlePrevGallery}
+            >
+              &lt;
+            </button>
+            <button 
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full"
+              onClick={handleNextGallery}
+            >
+              &gt;
+            </button>
+          </div>
         </div>
       </section>
 
