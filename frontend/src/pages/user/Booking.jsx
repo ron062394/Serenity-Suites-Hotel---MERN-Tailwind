@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaCalendarAlt, FaUser, FaBed, FaCreditCard, FaMoneyBill } from 'react-icons/fa';
+import { FaCalendarAlt, FaUser, FaBed, FaCreditCard, FaMoneyBill, FaWifi, FaTv, FaSwimmingPool, FaParking } from 'react-icons/fa';
 
 function Booking() {
   const [step, setStep] = useState(1);
@@ -13,12 +13,15 @@ function Booking() {
     city: '',
     country: '',
     zipCode: '',
+    specialRequests: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('');
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const [selectedRoom, setSelectedRoom] = useState('');
   const [isNextDisabled, setIsNextDisabled] = useState(true);
+  const [roomTypes, setRoomTypes] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -55,6 +58,50 @@ function Booking() {
 
     validateStep();
   }, [step, checkInDate, checkOutDate, guestInfo, selectedRoom, paymentMethod]);
+
+  useEffect(() => {
+    const fetchRoomTypes = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/roomTypes');
+        if (!response.ok) {
+          throw new Error('Failed to fetch room types');
+        }
+        const data = await response.json();
+        setRoomTypes(data);
+      } catch (error) {
+        console.error('Error fetching room types:', error);
+      }
+    };
+
+    fetchRoomTypes();
+  }, []);
+
+  useEffect(() => {
+    if (selectedRoom && checkInDate && checkOutDate) {
+      const selectedRoomType = roomTypes.find(room => room._id === selectedRoom);
+      if (selectedRoomType) {
+        const checkIn = new Date(checkInDate);
+        const checkOut = new Date(checkOutDate);
+        const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+        setTotalPrice(selectedRoomType.price * nights);
+      }
+    }
+  }, [selectedRoom, checkInDate, checkOutDate, roomTypes]);
+
+  const renderAmenityIcon = (amenity) => {
+    switch (amenity.toLowerCase()) {
+      case 'wifi':
+        return <FaWifi className="inline-block mr-2" />;
+      case 'tv':
+        return <FaTv className="inline-block mr-2" />;
+      case 'pool':
+        return <FaSwimmingPool className="inline-block mr-2" />;
+      case 'parking':
+        return <FaParking className="inline-block mr-2" />;
+      default:
+        return null;
+    }
+  };
 
   const renderStep = () => {
     switch(step) {
@@ -109,6 +156,10 @@ function Booking() {
                 <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">Zip Code</label>
                 <input type="text" id="zipCode" name="zipCode" value={guestInfo.zipCode} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
+              <div className="md:col-span-2">
+                <label htmlFor="specialRequests" className="block text-sm font-medium text-gray-700">Special Requests</label>
+                <textarea id="specialRequests" name="specialRequests" value={guestInfo.specialRequests} onChange={handleInputChange} rows="3" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="Any special requests or requirements?"></textarea>
+              </div>
             </div>
           </motion.div>
         );
@@ -117,19 +168,40 @@ function Booking() {
           <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
             <h2 className="text-2xl font-bold mb-4">Select Room</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {['Deluxe Suite', 'Royal Suite', 'Zen Garden Room', 'Skyline Penthouse'].map((room, index) => (
-                <div key={index} className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="text-lg font-semibold">{room}</h3>
-                  <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              {roomTypes.map((roomType) => (
+                <div key={roomType._id} className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
+                  <h3 className="text-lg font-semibold">{roomType.roomType}</h3>
+                  <p className="text-gray-600">{roomType.description}</p>
+                  <p className="text-emerald-600 font-semibold mt-2">Price: ${roomType.price}/night</p>
+                  <p className="text-gray-700">Capacity: {roomType.capacity} guests</p>
+                  <div className="mt-2">
+                    <p className="font-medium">Amenities:</p>
+                    <ul className="list-disc list-inside">
+                      {roomType.amenities.map((amenity, index) => (
+                        <li key={index} className="flex items-center">
+                          {renderAmenityIcon(amenity)}
+                          {amenity}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                   <button 
-                    className={`mt-2 px-4 py-2 ${selectedRoom === room ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700'} rounded hover:bg-emerald-700 transition-colors`}
-                    onClick={() => setSelectedRoom(room)}
+                    className={`mt-4 px-4 py-2 ${selectedRoom === roomType._id ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700'} rounded hover:bg-emerald-700 transition-colors`}
+                    onClick={() => setSelectedRoom(roomType._id)}
                   >
-                    {selectedRoom === room ? 'Selected' : 'Select'}
+                    {selectedRoom === roomType._id ? 'Selected' : 'Select'}
                   </button>
                 </div>
               ))}
             </div>
+            {selectedRoom && (
+              <div className="mt-4 p-4 bg-emerald-100 rounded-lg">
+                <h3 className="text-lg font-semibold text-emerald-800">Booking Summary</h3>
+                <p>Check-in: {checkInDate}</p>
+                <p>Check-out: {checkOutDate}</p>
+                <p className="font-bold">Total Price: ${totalPrice}</p>
+              </div>
+            )}
           </motion.div>
         );
       case 4:
@@ -183,6 +255,16 @@ function Booking() {
                 </div>
               </div>
             )}
+            <div className="mt-4 p-4 bg-emerald-100 rounded-lg">
+              <h3 className="text-lg font-semibold text-emerald-800">Final Booking Summary</h3>
+              <p>Check-in: {checkInDate}</p>
+              <p>Check-out: {checkOutDate}</p>
+              <p>Room: {roomTypes.find(room => room._id === selectedRoom)?.name}</p>
+              <p>Capacity: {roomTypes.find(room => room._id === selectedRoom)?.capacity} guests</p>
+              <p>Amenities: {roomTypes.find(room => room._id === selectedRoom)?.amenities.join(', ')}</p>
+              <p className="font-bold">Total Price: ${totalPrice}</p>
+              <p>Payment Method: {paymentMethod === 'payNow' ? 'Pay Now' : 'Pay at Counter'}</p>
+            </div>
           </motion.div>
         );
       default:
