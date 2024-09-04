@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUsers, FaHotel, FaCalendarAlt, FaChartLine, FaBell, FaSearch, FaDownload, FaTachometerAlt, FaSignOutAlt, FaBook, FaDoorOpen, FaUserCheck } from 'react-icons/fa';
+import { FaUsers, FaHotel, FaCalendarAlt, FaChartLine, FaBell, FaSearch, FaDownload, FaTachometerAlt, FaSignOutAlt, FaBook, FaDoorOpen, FaUserCheck, FaBed } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import ManageBookings from './ManageBookings';
@@ -8,6 +8,7 @@ import ManageRooms from './ManageRooms';
 import ManageUsers from './ManageUsers';
 import Notifications from './Notifications';
 import BookingLog from './BookingLog';
+import RoomType from './RoomType';
 
 function AdminDashboard() {
   const [selectedTab, setSelectedTab] = useState('overview');
@@ -154,6 +155,12 @@ function AdminDashboard() {
               <BookingLog />
           </motion.div>
         );
+      case 'roomtype':
+        return (
+          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+              <RoomType />
+          </motion.div>
+        );
       default:
         return null;
     }
@@ -166,8 +173,9 @@ function AdminDashboard() {
         <ul className="space-y-4">
           {[
             { name: 'Overview', icon: <FaTachometerAlt />, tab: 'overview' },
-            { name: 'Bookings', icon: <FaCalendarAlt />, tab: 'bookings' },
-            { name: 'Rooms', icon: <FaHotel />, tab: 'rooms' },
+            { name: 'Rooms', icon: <FaCalendarAlt />, tab: 'bookings' },
+            { name: 'Manage Rooms', icon: <FaHotel />, tab: 'rooms' },
+            { name: 'Room Types', icon: <FaBed />, tab: 'roomtype' },
             { name: 'Users', icon: <FaUsers />, tab: 'users' },
             { name: 'Notifications', icon: <FaBell />, tab: 'notifications' },
             { name: 'Booking Log', icon: <FaBook />, tab: 'bookinglog' },
@@ -194,7 +202,6 @@ function AdminDashboard() {
         </button>
       </nav>
       <div className="flex-1 p-10">
-        <h2 className="text-4xl font-bold mb-8 text-gray-800">Admin Dashboard</h2>
         <div className="bg-white rounded-lg shadow-md p-8">
           {renderContent()}
         </div>

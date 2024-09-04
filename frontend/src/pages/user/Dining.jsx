@@ -31,10 +31,10 @@ function Dining() {
       ></div>
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10">
-        <section className="py-24">
-          <div className="container mx-auto px-4">
+        <section className="py-12 sm:py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.h1 
-              className="text-4xl font-bold mb-12 text-center text-white"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 md:mb-12 text-center text-white"
               initial="hidden"
               animate="visible"
               variants={fadeInUp}
@@ -42,7 +42,7 @@ function Dining() {
               Culinary Delights at Serenity Suites
             </motion.h1>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
               {diningOptions.map((option) => (
                 <motion.div 
                   key={option.id} 
@@ -50,14 +50,14 @@ function Dining() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <img src={option.image} alt={option.name} className="w-full h-64 object-cover" />
-                  <div className="p-6">
+                  <img src={option.image} alt={option.name} className="w-full h-48 sm:h-56 md:h-64 object-cover" />
+                  <div className="p-4 sm:p-6">
                     <div className="flex items-center mb-2">
                       {option.icon}
-                      <h2 className="text-2xl font-semibold ml-2 text-emerald-800">{option.name}</h2>
+                      <h2 className="text-xl sm:text-2xl font-semibold ml-2 text-emerald-800">{option.name}</h2>
                     </div>
-                    <p className="text-emerald-700 mb-4">{option.description}</p>
-                    <Link to={`/dining/${option.id}`} className="inline-block px-6 py-2 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+                    <p className="text-sm sm:text-base text-emerald-700 mb-4">{option.description}</p>
+                    <Link to={`/dining/${option.id}`} className="inline-block px-4 sm:px-6 py-2 text-sm sm:text-base font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105">
                       Learn More
                     </Link>
                   </div>
@@ -67,29 +67,29 @@ function Dining() {
           </div>
         </section>
 
-        <section className="py-24 bg-emerald-800 bg-opacity-80 text-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-12 text-center">Culinary Experiences</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <section className="py-12 sm:py-16 md:py-24 bg-emerald-800 bg-opacity-80 text-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 md:mb-12 text-center">Culinary Experiences</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               {culinaryExperiences.map((experience, index) => (
                 <motion.div 
                   key={index}
-                  className="bg-emerald-700 bg-opacity-80 p-6 rounded-lg shadow-md text-center"
+                  className="bg-emerald-700 bg-opacity-80 p-4 sm:p-6 rounded-lg shadow-md text-center"
                   whileHover={{ y: -5 }}
                 >
-                  {experience.icon}
-                  <h3 className="text-xl font-semibold mt-4">{experience.name}</h3>
+                  {React.cloneElement(experience.icon, { className: "text-3xl sm:text-4xl mx-auto" })}
+                  <h3 className="text-lg sm:text-xl font-semibold mt-3 sm:mt-4">{experience.name}</h3>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="py-24">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-8 text-white">Make a Reservation</h2>
-            <p className="text-xl mb-8 text-white">Secure your table at one of our exquisite dining venues.</p>
-            <Link to="/dining-reservation" className="inline-block px-8 py-3 text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+        <section className="py-12 sm:py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 md:mb-8 text-white">Make a Reservation</h2>
+            <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-white">Secure your table at one of our exquisite dining venues.</p>
+            <Link to="/dining-reservation" className="inline-block px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base md:text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
               Reserve Now
             </Link>
           </div>

@@ -16,7 +16,7 @@ function Rooms() {
   };
 
   return (
-    <div className="bg-gray-50 relative">
+    <div className="bg-gray-50 relative min-h-screen">
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed"
         style={{
@@ -25,17 +25,17 @@ function Rooms() {
       ></div>
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10">
-        <section className="py-24">
-          <div className="container mx-auto px-4">
+        <section className="py-12 sm:py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.h1 
-              className="text-4xl font-bold mb-12 text-center text-white"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 md:mb-12 text-center text-white"
               initial="hidden"
               animate="visible"
               variants={fadeInUp}
             >
               Exquisite Accommodations
             </motion.h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
               {rooms.map((room) => (
                 <motion.div 
                   key={room.id} 
@@ -43,11 +43,11 @@ function Rooms() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <img src={room.image} alt={room.name} className="w-full h-64 object-cover" />
-                  <div className="p-6">
-                    <h2 className="text-2xl font-semibold mb-2 text-emerald-800">{room.name}</h2>
-                    <p className="text-emerald-700 mb-4">{room.description}</p>
-                    <Link to={`/rooms/${room.id}`} className="inline-block px-6 py-2 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+                  <img src={room.image} alt={room.name} className="w-full h-48 sm:h-56 md:h-64 object-cover" />
+                  <div className="p-4 sm:p-6">
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-2 text-emerald-800">{room.name}</h2>
+                    <p className="text-sm sm:text-base text-emerald-700 mb-4">{room.description}</p>
+                    <Link to={`/rooms/${room.id}`} className="inline-block px-4 sm:px-6 py-2 text-sm sm:text-base font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105">
                       Explore
                     </Link>
                   </div>

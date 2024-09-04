@@ -1,23 +1,67 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck, FaTimes as FaCross } from 'react-icons/fa';
 
 function ManageRooms() {
   const [activeFloor, setActiveFloor] = useState(1);
-  const [rooms, setRooms] = useState({
-    1: [
-      { id: 101, number: '101', type: 'Standard', capacity: 2, price: 100 },
-      { id: 102, number: '102', type: 'Deluxe', capacity: 3, price: 150 },
-    ],
-    2: [
-      { id: 201, number: '201', type: 'Suite', capacity: 4, price: 200 },
-      { id: 202, number: '202', type: 'Standard', capacity: 2, price: 100 },
-    ],
-    3: [
-      { id: 301, number: '301', type: 'Deluxe', capacity: 3, price: 150 },
-      { id: 302, number: '302', type: 'Suite', capacity: 4, price: 200 },
-    ],
+  const [rooms, setRooms] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [existingRoomNumbers, setExistingRoomNumbers] = useState([]);
+  const [roomTypes, setRoomTypes] = useState([]);
+  
+  const [newRoom, setNewRoom] = useState({
+    roomNumber: '',
+    roomType: '',
+    status: 'available',
+    floor: '',
   });
+
+  const [isRoomNumberValid, setIsRoomNumberValid] = useState(null);
+
+  const floorOptions = [1, 2, 3, 4, 5];
+
+  useEffect(() => {
+    fetchRooms();
+    fetchRoomTypes();
+  }, []);
+
+  const fetchRooms = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/rooms');
+      if (!response.ok) {
+        throw new Error('Failed to fetch rooms');
+      }
+      const data = await response.json();
+      
+      // Organize rooms by floor
+      const roomsByFloor = data.reduce((acc, room) => {
+        const floor = room.floor;
+        if (!acc[floor]) {
+          acc[floor] = [];
+        }
+        acc[floor].push(room);
+        return acc;
+      }, {});
+
+      setRooms(roomsByFloor);
+      setExistingRoomNumbers(data.map(room => room.roomNumber));
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  };
+
+  const fetchRoomTypes = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/roomTypes');
+      if (!response.ok) {
+        throw new Error('Failed to fetch room types');
+      }
+      const data = await response.json();
+      setRoomTypes(data);
+    } catch (error) {
+      console.error('Error fetching room types:', error);
+    }
+  };
 
   const handleEdit = (id) => {
     console.log(`Edit room ${id}`);
@@ -28,7 +72,54 @@ function ManageRooms() {
   };
 
   const handleAddRoom = () => {
-    console.log('Add new room');
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setNewRoom({
+      roomNumber: '',
+      roomType: '',
+      status: 'available',
+      floor: '',
+    });
+    setIsRoomNumberValid(null);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewRoom(prev => ({ ...prev, [name]: value }));
+    if (name === 'roomNumber') {
+      setIsRoomNumberValid(!existingRoomNumbers.includes(value));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (existingRoomNumbers.includes(newRoom.roomNumber)) {
+      alert('Room number already exists. Please choose a different room number.');
+      return;
+    }
+    console.log('New room:', newRoom);
+
+    try {
+      const response = await fetch("http://localhost:3001/api/rooms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newRoom),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to add room");
+      }
+      handleCloseModal();
+      fetchRooms(); // Refresh the rooms list
+      
+    } catch (error) {
+      console.error("Error adding room:", error.message);
+    }
   };
 
   const fadeInUp = {
@@ -74,32 +165,30 @@ function ManageRooms() {
           <thead className="bg-emerald-600 text-white">
             <tr>
               <th className="py-3 px-4 text-left">Room Number</th>
+              <th className="py-3 px-4 text-left">Floor</th>
               <th className="py-3 px-4 text-left">Type</th>
-              <th className="py-3 px-4 text-left">Capacity</th>
-              <th className="py-3 px-4 text-left">Price</th>
               <th className="py-3 px-4 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {rooms[activeFloor].map((room) => (
+            {rooms[activeFloor] && rooms[activeFloor].map((room) => (
               <motion.tr 
-                key={room.id}
+                key={room._id}
                 className="border-b border-gray-200 hover:bg-gray-100"
                 whileHover={{ scale: 1.01 }}
               >
-                <td className="py-3 px-4">{room.number}</td>
-                <td className="py-3 px-4">{room.type}</td>
-                <td className="py-3 px-4">{room.capacity}</td>
-                <td className="py-3 px-4">${room.price}</td>
+                <td className="py-3 px-4">{room.roomNumber}</td>
+                <td className="py-3 px-4">{room.floor}</td>
+                <td className="py-3 px-4">{room.roomType && room.roomType.roomType}</td>
                 <td className="py-3 px-4">
                   <button
-                    onClick={() => handleEdit(room.id)}
+                    onClick={() => handleEdit(room._id)}
                     className="text-blue-600 hover:text-blue-800 mr-2"
                   >
                     <FaEdit />
                   </button>
                   <button
-                    onClick={() => handleDelete(room.id)}
+                    onClick={() => handleDelete(room._id)}
                     className="text-red-600 hover:text-red-800"
                   >
                     <FaTrash />
@@ -110,6 +199,102 @@ function ManageRooms() {
           </tbody>
         </table>
       </div>
+
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white p-8 rounded-lg w-96"
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -50, opacity: 0 }}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold">Add New Room</h3>
+                <button onClick={handleCloseModal} className="text-gray-500 hover:text-gray-700">
+                  <FaTimes />
+                </button>
+              </div>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="roomNumber">
+                    Room Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="roomNumber"
+                      type="text"
+                      name="roomNumber"
+                      value={newRoom.roomNumber}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {isRoomNumberValid !== null && (
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+                        {isRoomNumberValid ? (
+                          <FaCheck className="text-green-500" />
+                        ) : (
+                          <FaCross className="text-red-500" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="floor">
+                    Floor
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="floor"
+                    name="floor"
+                    value={newRoom.floor}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select a floor</option>
+                    {floorOptions.map((floor) => (
+                      <option key={floor} value={floor}>{floor}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="roomType">
+                    Room Type
+                  </label>
+                  <select
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="roomType"
+                    name="roomType"
+                    value={newRoom.roomType}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select a room type</option>
+                    {roomTypes.map((type) => (
+                      <option key={type._id} value={type._id}>{type.roomType}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Add Room
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
