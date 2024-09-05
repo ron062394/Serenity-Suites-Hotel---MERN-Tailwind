@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 function ManageUsers() {
   const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState('admin');
+  const [editingUser, setEditingUser] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -14,7 +15,7 @@ function ManageUsers() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://serenity-suites-api.vercel.app/api/users', {
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/admin/users', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -33,7 +34,7 @@ function ManageUsers() {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`https://serenity-suites-api.vercel.app/api/users/${userId}`, {
+        const response = await fetch(`https://serenity-suites-api.vercel.app/api/admin/users/${userId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -46,6 +47,32 @@ function ManageUsers() {
       } catch (error) {
         console.error('Error deleting user:', error);
       }
+    }
+  };
+
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+  };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/admin/users/${editingUser._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(editingUser)
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update user');
+      }
+      setUsers(users.map(user => user._id === editingUser._id ? editingUser : user));
+      setEditingUser(null);
+    } catch (error) {
+      console.error('Error updating user:', error);
     }
   };
 
@@ -93,16 +120,30 @@ function ManageUsers() {
                 whileHover={{ backgroundColor: '#f0fdf4' }}
                 className="border-b border-gray-200"
               >
-                <td className="py-3 px-4">{user.name}</td>
-                <td className="py-3 px-4">{user.email}</td>
-                <td className="py-3 px-4">{user.role}</td>
+                <td className="py-3 px-4">{editingUser && editingUser._id === user._id ? <input value={editingUser.name} onChange={(e) => setEditingUser({...editingUser, name: e.target.value})} /> : user.name}</td>
+                <td className="py-3 px-4">{editingUser && editingUser._id === user._id ? <input value={editingUser.email} onChange={(e) => setEditingUser({...editingUser, email: e.target.value})} /> : user.email}</td>
+                <td className="py-3 px-4">{editingUser && editingUser._id === user._id ? 
+                  <select value={editingUser.role} onChange={(e) => setEditingUser({...editingUser, role: e.target.value})}>
+                    <option value="admin">Admin</option>
+                    <option value="customer">Customer</option>
+                  </select> : user.role}
+                </td>
                 <td className="py-3 px-4">
-                  <Link to={`/admin/users/${user._id}/edit`} className="text-blue-600 hover:text-blue-800 mr-3">
-                    <FaEdit className="inline-block" />
-                  </Link>
-                  <button onClick={() => handleDeleteUser(user._id)} className="text-red-600 hover:text-red-800">
-                    <FaTrash className="inline-block" />
-                  </button>
+                  {editingUser && editingUser._id === user._id ? (
+                    <>
+                      <button onClick={handleUpdateUser} className="text-green-600 hover:text-green-800 mr-3">Save</button>
+                      <button onClick={() => setEditingUser(null)} className="text-gray-600 hover:text-gray-800">Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => handleEditUser(user)} className="text-blue-600 hover:text-blue-800 mr-3">
+                        <FaEdit className="inline-block" />
+                      </button>
+                      <button onClick={() => handleDeleteUser(user._id)} className="text-red-600 hover:text-red-800">
+                        <FaTrash className="inline-block" />
+                      </button>
+                    </>
+                  )}
                 </td>
               </motion.tr>
             ))}
