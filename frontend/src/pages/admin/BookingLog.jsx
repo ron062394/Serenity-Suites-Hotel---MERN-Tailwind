@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaSearch, FaFilter, FaBed, FaClock, FaCheckCircle, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaBed, FaCheckCircle, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import BookDetails from './BookDetails';
 
 function BookingLog() {
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
   const [rooms, setRooms] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,21 +14,21 @@ function BookingLog() {
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [isConfirmDisabled, setIsConfirmDisabled] = useState(true);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(0);
+  const [isBookDetailsOpen, setIsBookDetailsOpen] = useState(false);
 
   useEffect(() => {
     // Fetch bookings from API
     const fetchBookings = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/bookings');
+        const response = await fetch('http://localhost:3001/api/bookings/ascending');
         if (!response.ok) {
           throw new Error('Failed to fetch bookings');
         }
         const data = await response.json();
-        // Sort bookings by createdAt timestamp, latest first
-        const sortedBookings = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setBookings(sortedBookings);
-        setFilteredBookings(sortedBookings);
+        setBookings(data);
+        setFilteredBookings(data);
+        console.log('Bookings data:', data);
       } catch (error) {
         console.error('Error fetching bookings:', error);
         // Handle error (e.g., show error message to user)
@@ -44,6 +44,7 @@ function BookingLog() {
         }
         const data = await response.json();
         setRooms(data);
+        console.log('Rooms data:', data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
         // Handle error (e.g., show error message to user)
@@ -54,21 +55,8 @@ function BookingLog() {
     fetchRooms();
   }, []);
 
-  useEffect(() => {
-    const results = bookings.filter(booking =>
-      (booking.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-       booking.roomNumber?.toString().includes(searchTerm)) &&
-      (filterStatus === 'all' || booking.status === filterStatus)
-    );
-    setFilteredBookings(results);
-  }, [searchTerm, filterStatus, bookings]);
-
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-  };
-
-  const handleFilterChange = (event) => {
-    setFilterStatus(event.target.value);
   };
 
   const handleAssignRoom = (booking) => {
@@ -88,10 +76,10 @@ function BookingLog() {
     }
 
     setSelectedRoom(room);
-    if (selectedBooking.roomType && room.roomType.roomType !== selectedBooking.roomType) {
-      setConfirmationMessage(`Warning: The selected room type (${room.roomType.roomType}) does not match the requested room type (${selectedBooking.roomType}).`);
+    if (selectedBooking.roomName && room.roomType.roomName !== selectedBooking.roomName) {
+      setConfirmationMessage(`Warning: The selected room type (${room.roomType.roomName}) does not match the requested room type (${selectedBooking.roomName}).`);
     } else {
-      setConfirmationMessage(`You are about to assign Room ${room.roomNumber} to ${selectedBooking.name}.`);
+      setConfirmationMessage(`You are about to assign ${room.roomType.roomName} Room to ${selectedBooking.firstName} ${selectedBooking.lastName}.`);
     }
     setIsConfirmDisabled(true);
     setCountdown(3);
@@ -125,9 +113,21 @@ function BookingLog() {
 
       const updatedBooking = await response.json();
       setBookings(bookings.map(booking => 
-        booking._id === updatedBooking._id ? updatedBooking : booking
+        booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
+      ));
+      setFilteredBookings(bookings.map(booking => 
+        booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
       setIsModalOpen(false);
+
+      // Update rooms status
+      const updatedRoomsResponse = await fetch('http://localhost:3001/api/rooms');
+      if (!updatedRoomsResponse.ok) {
+        throw new Error('Failed to fetch updated rooms');
+      }
+      const updatedRooms = await updatedRoomsResponse.json();
+      setRooms(updatedRooms);
+
     } catch (error) {
       console.error('Error assigning room and confirming booking:', error);
       // Handle error (e.g., show error message to user)
@@ -148,6 +148,10 @@ function BookingLog() {
       setBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
+      setFilteredBookings(bookings.map(booking => 
+        booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
+      ));
+      
     } catch (error) {
       console.error('Error checking in guest:', error);
       // Handle error (e.g., show error message to user)
@@ -168,6 +172,17 @@ function BookingLog() {
       setBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
+      setFilteredBookings(bookings.map(booking => 
+        booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
+      ));
+
+      // Update rooms status
+      const updatedRoomsResponse = await fetch('http://localhost:3001/api/rooms');
+      if (!updatedRoomsResponse.ok) {
+        throw new Error('Failed to fetch updated rooms');
+      }
+      const updatedRooms = await updatedRoomsResponse.json();
+      setRooms(updatedRooms);
     } catch (error) {
       console.error('Error checking out guest:', error);
       // Handle error (e.g., show error message to user)
@@ -188,10 +203,18 @@ function BookingLog() {
       setBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
+      setFilteredBookings(bookings.map(booking => 
+        booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
+      ));
     } catch (error) {
       console.error('Error canceling booking:', error);
       // Handle error (e.g., show error message to user)
     }
+  };
+
+  const handleBookingClick = (booking) => {
+    setSelectedBooking(booking);
+    setIsBookDetailsOpen(true);
   };
 
   const fadeInUp = {
@@ -218,21 +241,6 @@ function BookingLog() {
             onChange={handleSearch}
           />
         </div>
-        <div className="relative">
-          <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <select
-            className="pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            value={filterStatus}
-            onChange={handleFilterChange}
-          >
-            <option value="all">All Statuses</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="checked-in">Checked-In</option>
-            <option value="checked-out">Checked-Out</option>
-            <option value="canceled">Canceled</option>
-          </select>
-        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -246,80 +254,90 @@ function BookingLog() {
               <th className="py-3 px-4 text-left">Check-Out</th>
               <th className="py-3 px-4 text-left">Status</th>
               <th className="py-3 px-4 text-left">Created At</th>
+              <th className="py-3 px-4 text-left">Special Requests</th>
               <th className="py-3 px-4 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredBookings.map((booking) => (
-              <motion.tr
-                key={booking._id}
-                className="border-b border-gray-200 hover:bg-gray-100"
-                whileHover={{ scale: 1.01 }}
-              >
-                <td className="py-3 px-4">{booking._id}</td>
-                <td className="py-3 px-4">{booking.name}</td>
-                <td className="py-3 px-4">{booking.roomNumber || 'Not assigned'}</td>
-                <td className="py-3 px-4">{booking.roomType || 'Not specified'}</td>
-                <td className="py-3 px-4">{new Date(booking.checkInDate).toLocaleDateString()}</td>
-                <td className="py-3 px-4">{new Date(booking.checkOutDate).toLocaleDateString()}</td>
-                <td className="py-3 px-4">
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold
-                    ${booking.status === 'confirmed' ? 'bg-green-200 text-green-800' :
-                      booking.status === 'checked-in' ? 'bg-blue-200 text-blue-800' :
-                      booking.status === 'checked-out' ? 'bg-gray-200 text-gray-800' :
-                      booking.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
-                      'bg-red-200 text-red-800'}`}>
-                    {booking.status}
-                  </span>
+            {filteredBookings.length === 0 ? (
+              <tr>
+                <td colSpan="10" className="py-4 px-4 text-center text-gray-500">
+                  No bookings found.
                 </td>
-                <td className="py-3 px-4">
-                  <span className="flex items-center">
-                    <FaClock className="mr-2" />
-                    {new Date(booking.createdAt).toLocaleString()}
-                  </span>
-                </td>
-                <td className="py-3 px-4">
-                  <div className="flex flex-wrap gap-2">
-                    {!booking.roomNumber && (
-                      <button
-                        onClick={() => handleAssignRoom(booking)}
-                        className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded w-full"
-                      >
-                        <FaBed className="inline-block mr-2" />
-                        Assign Room
-                      </button>
-                    )}
-                    {booking.status === 'confirmed' && (
-                      <button
-                        onClick={() => handleCheckIn(booking._id)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full"
-                      >
-                        <FaCheckCircle className="inline-block mr-2" />
-                        Check In
-                      </button>
-                    )}
-                    {booking.status === 'checked-in' && (
-                      <button
-                        onClick={() => handleCheckOut(booking._id)}
-                        className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded w-full"
-                      >
-                        <FaSignOutAlt className="inline-block mr-2" />
-                        Check Out
-                      </button>
-                    )}
-                    {(booking.status === 'pending' || booking.status === 'confirmed') && (
-                      <button
-                        onClick={() => handleCancelBooking(booking._id)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-full"
-                      >
-                        <FaTimes className="inline-block mr-2" />
-                        Cancel
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </motion.tr>
-            ))}
+              </tr>
+            ) : (
+              filteredBookings.map((booking) => (
+                <motion.tr
+                  key={booking._id}
+                  className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                  whileHover={{ scale: 1.01 }}
+                  onClick={() => handleBookingClick(booking)}
+                >
+                  <td className="py-3 px-4 text-blue-500 underline">{booking._id.slice(-6)}</td>
+                  <td className="py-3 px-4">{booking.firstName} {booking.lastName}</td>
+                  <td className="py-3 px-4">{booking.roomNumber || 'Not assigned'}</td>
+                  <td className="py-3 px-4">{booking.roomName || 'Not specified'}</td>
+                  <td className="py-3 px-4">{new Date(booking.checkInDate).toLocaleDateString()}</td>
+                  <td className="py-3 px-4">{new Date(booking.checkOutDate).toLocaleDateString()}</td>
+                  <td className="py-3 px-4">
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold
+                      ${booking.status === 'confirmed' ? 'bg-green-200 text-green-800' :
+                        booking.status === 'checked-in' ? 'bg-blue-200 text-blue-800' :
+                        booking.status === 'checked-out' ? 'bg-gray-200 text-gray-800' :
+                        booking.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
+                        'bg-red-200 text-red-800'}`}>
+                      {booking.status}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">
+                    <span className="flex items-center">
+                      {new Date(booking.createdAt).toLocaleString()}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">{booking.specialRequests ? 'Yes' : 'None'}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex flex-wrap gap-2">
+                      {!booking.roomNumber && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleAssignRoom(booking); }}
+                          className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded w-full"
+                        >
+                          <FaBed className="inline-block mr-2" />
+                          Assign Room
+                        </button>
+                      )}
+                      {booking.status === 'confirmed' && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleCheckIn(booking._id); }}
+                          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full"
+                        >
+                          <FaCheckCircle className="inline-block mr-2" />
+                          Check In
+                        </button>
+                      )}
+                      {booking.status === 'checked-in' && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleCheckOut(booking._id); }}
+                          className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded w-full"
+                        >
+                          <FaSignOutAlt className="inline-block mr-2" />
+                          Check Out
+                        </button>
+                      )}
+                      {(booking.status === 'pending' || booking.status === 'confirmed') && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleCancelBooking(booking._id); }}
+                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-full"
+                        >
+                          <FaTimes className="inline-block mr-2" />
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </motion.tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -380,7 +398,7 @@ function BookingLog() {
                   isConfirmDisabled ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
-                Confirm
+                Confirm {countdown > 0 ? `(${countdown})` : ''}
               </button>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -392,8 +410,24 @@ function BookingLog() {
           </div>
         </div>
       )}
-      </motion.div>
-    );
+
+      {isBookDetailsOpen && selectedBooking && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+            <BookDetails booking={selectedBooking} />
+            <div className="mt-4 flex justify-end space-x-2">
+              <button
+                onClick={() => setIsBookDetailsOpen(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
 }
 
 export default BookingLog;

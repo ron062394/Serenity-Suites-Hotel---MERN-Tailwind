@@ -23,7 +23,6 @@ import RoomDetails from './pages/user/RoomDetails';
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageRooms from './pages/admin/ManageRooms';
-import ManageBookings from './pages/admin/ManageBookings';
 import ManageUsers from './pages/admin/ManageUsers';
 import Notifications from './pages/admin/Notifications';
 import AdminLogin from './pages/admin/AdminLogin';
@@ -53,7 +52,6 @@ function AppContent() {
           {/* Admin Routes */}
           <Route path="/admin/" element={<AdminDashboard />} />
           <Route path="/admin/manage-rooms" element={<ManageRooms />} />
-          <Route path="/admin/manage-bookings" element={<ManageBookings />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/manage-users" element={<ManageUsers />} />
           <Route path="/admin/notifications" element={<Notifications />} />

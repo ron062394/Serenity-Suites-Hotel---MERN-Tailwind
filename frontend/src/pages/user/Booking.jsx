@@ -4,7 +4,10 @@ import { FaCalendarAlt, FaUser, FaBed, FaCreditCard, FaMoneyBill, FaWifi, FaTv, 
 
 function Booking() {
   const [step, setStep] = useState(1);
-  const [guestInfo, setGuestInfo] = useState({
+  const [bookingInfo, setBookingInfo] = useState({
+    roomName: '',
+    checkInDate: '',
+    checkOutDate: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -14,14 +17,16 @@ function Booking() {
     country: '',
     zipCode: '',
     specialRequests: '',
+    status: 'pending',
+    paymentMethod: '',
   });
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [checkInDate, setCheckInDate] = useState('');
-  const [checkOutDate, setCheckOutDate] = useState('');
-  const [selectedRoom, setSelectedRoom] = useState('');
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const [roomTypes, setRoomTypes] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('payNow');
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -30,7 +35,7 @@ function Booking() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setGuestInfo(prevState => ({
+    setBookingInfo(prevState => ({
       ...prevState,
       [name]: value
     }));
@@ -40,16 +45,16 @@ function Booking() {
     const validateStep = () => {
       switch(step) {
         case 1:
-          setIsNextDisabled(!checkInDate || !checkOutDate);
+          setIsNextDisabled(!bookingInfo.checkInDate || !bookingInfo.checkOutDate);
           break;
         case 2:
-          setIsNextDisabled(Object.values(guestInfo).some(value => value === ''));
+          setIsNextDisabled(['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'country', 'zipCode'].some(field => !bookingInfo[field]));
           break;
         case 3:
-          setIsNextDisabled(!selectedRoom);
+          setIsNextDisabled(!bookingInfo.roomName);
           break;
         case 4:
-          setIsNextDisabled(!paymentMethod);
+          setIsNextDisabled(!bookingInfo.paymentMethod);
           break;
         default:
           setIsNextDisabled(false);
@@ -57,7 +62,7 @@ function Booking() {
     };
 
     validateStep();
-  }, [step, checkInDate, checkOutDate, guestInfo, selectedRoom, paymentMethod]);
+  }, [step, bookingInfo]);
 
   useEffect(() => {
     const fetchRoomTypes = async () => {
@@ -77,16 +82,16 @@ function Booking() {
   }, []);
 
   useEffect(() => {
-    if (selectedRoom && checkInDate && checkOutDate) {
-      const selectedRoomType = roomTypes.find(room => room._id === selectedRoom);
+    if (bookingInfo.roomName && bookingInfo.checkInDate && bookingInfo.checkOutDate) {
+      const selectedRoomType = roomTypes.find(room => room.roomName === bookingInfo.roomName);
       if (selectedRoomType) {
-        const checkIn = new Date(checkInDate);
-        const checkOut = new Date(checkOutDate);
+        const checkIn = new Date(bookingInfo.checkInDate);
+        const checkOut = new Date(bookingInfo.checkOutDate);
         const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
         setTotalPrice(selectedRoomType.price * nights);
       }
     }
-  }, [selectedRoom, checkInDate, checkOutDate, roomTypes]);
+  }, [bookingInfo.roomName, bookingInfo.checkInDate, bookingInfo.checkOutDate, roomTypes]);
 
   const renderAmenityIcon = (amenity) => {
     switch (amenity.toLowerCase()) {
@@ -103,6 +108,32 @@ function Booking() {
     }
   };
 
+  const handleBooking = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...bookingInfo,
+          price: totalPrice,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create booking');
+      }
+
+      const result = await response.json();
+      console.log('Booking created:', result);
+      // Handle successful booking (e.g., show confirmation, redirect)
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
+
   const renderStep = () => {
     switch(step) {
       case 1:
@@ -110,12 +141,12 @@ function Booking() {
           <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
             <h2 className="text-2xl font-bold mb-4">Select Dates</h2>
             <div className="mb-4">
-              <label htmlFor="checkIn" className="block text-sm font-medium text-gray-700">Check-in Date</label>
-              <input type="date" id="checkIn" name="checkIn" value={checkInDate} onChange={(e) => setCheckInDate(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+              <label htmlFor="checkInDate" className="block text-sm font-medium text-gray-700">Check-in Date</label>
+              <input type="date" id="checkInDate" name="checkInDate" value={bookingInfo.checkInDate} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
             </div>
             <div className="mb-4">
-              <label htmlFor="checkOut" className="block text-sm font-medium text-gray-700">Check-out Date</label>
-              <input type="date" id="checkOut" name="checkOut" value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+              <label htmlFor="checkOutDate" className="block text-sm font-medium text-gray-700">Check-out Date</label>
+              <input type="date" id="checkOutDate" name="checkOutDate" value={bookingInfo.checkOutDate} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
             </div>
           </motion.div>
         );
@@ -126,39 +157,39 @@ function Booking() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
-                <input type="text" id="firstName" name="firstName" value={guestInfo.firstName} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="text" id="firstName" name="firstName" value={bookingInfo.firstName} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-                <input type="text" id="lastName" name="lastName" value={guestInfo.lastName} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="text" id="lastName" name="lastName" value={bookingInfo.lastName} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
-                <input type="email" id="email" name="email" value={guestInfo.email} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="email" id="email" name="email" value={bookingInfo.email} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
-                <input type="tel" id="phone" name="phone" value={guestInfo.phone} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="tel" id="phone" name="phone" value={bookingInfo.phone} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div className="md:col-span-2">
                 <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-                <input type="text" id="address" name="address" value={guestInfo.address} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="text" id="address" name="address" value={bookingInfo.address} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div>
                 <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
-                <input type="text" id="city" name="city" value={guestInfo.city} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="text" id="city" name="city" value={bookingInfo.city} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div>
                 <label htmlFor="country" className="block text-sm font-medium text-gray-700">Country</label>
-                <input type="text" id="country" name="country" value={guestInfo.country} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="text" id="country" name="country" value={bookingInfo.country} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div>
                 <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">Zip Code</label>
-                <input type="text" id="zipCode" name="zipCode" value={guestInfo.zipCode} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input type="text" id="zipCode" name="zipCode" value={bookingInfo.zipCode} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div className="md:col-span-2">
                 <label htmlFor="specialRequests" className="block text-sm font-medium text-gray-700">Special Requests</label>
-                <textarea id="specialRequests" name="specialRequests" value={guestInfo.specialRequests} onChange={handleInputChange} rows="3" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="Any special requests or requirements?"></textarea>
+                <textarea id="specialRequests" name="specialRequests" value={bookingInfo.specialRequests} onChange={handleInputChange} rows="3" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="Any special requests or requirements?"></textarea>
               </div>
             </div>
           </motion.div>
@@ -170,7 +201,7 @@ function Booking() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {roomTypes.map((roomType) => (
                 <div key={roomType._id} className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  <h3 className="text-lg font-semibold">{roomType.roomType}</h3>
+                  <h3 className="text-lg font-semibold">{roomType.roomName}</h3>
                   <p className="text-gray-600">{roomType.description}</p>
                   <p className="text-emerald-600 font-semibold mt-2">Price: ${roomType.price}/night</p>
                   <p className="text-gray-700">Capacity: {roomType.capacity} guests</p>
@@ -186,19 +217,19 @@ function Booking() {
                     </ul>
                   </div>
                   <button 
-                    className={`mt-4 px-4 py-2 ${selectedRoom === roomType._id ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700'} rounded hover:bg-emerald-700 transition-colors`}
-                    onClick={() => setSelectedRoom(roomType._id)}
+                    className={`mt-4 px-4 py-2 ${bookingInfo.roomName === roomType.roomName ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700'} rounded hover:bg-emerald-700 transition-colors`}
+                    onClick={() => handleInputChange({ target: { name: 'roomName', value: roomType.roomName } })}
                   >
-                    {selectedRoom === roomType._id ? 'Selected' : 'Select'}
+                    {bookingInfo.roomName === roomType.roomName ? 'Selected' : 'Select'}
                   </button>
                 </div>
               ))}
             </div>
-            {selectedRoom && (
+            {bookingInfo.roomName && (
               <div className="mt-4 p-4 bg-emerald-100 rounded-lg">
                 <h3 className="text-lg font-semibold text-emerald-800">Booking Summary</h3>
-                <p>Check-in: {checkInDate}</p>
-                <p>Check-out: {checkOutDate}</p>
+                <p>Check-in: {bookingInfo.checkInDate}</p>
+                <p>Check-out: {bookingInfo.checkOutDate}</p>
                 <p className="font-bold">Total Price: ${totalPrice}</p>
               </div>
             )}
@@ -215,8 +246,8 @@ function Booking() {
                     type="radio"
                     name="paymentMethod"
                     value="payNow"
-                    checked={paymentMethod === 'payNow'}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    checked={bookingInfo.paymentMethod === 'payNow'}
+                    onChange={handleInputChange}
                     className="form-radio text-emerald-600"
                   />
                   <span className="text-gray-700">Pay Now <FaCreditCard className="inline ml-2" /></span>
@@ -228,15 +259,15 @@ function Booking() {
                     type="radio"
                     name="paymentMethod"
                     value="payLater"
-                    checked={paymentMethod === 'payLater'}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    checked={bookingInfo.paymentMethod === 'payLater'}
+                    onChange={handleInputChange}
                     className="form-radio text-emerald-600"
                   />
                   <span className="text-gray-700">Pay at Counter <FaMoneyBill className="inline ml-2" /></span>
                 </label>
               </div>
             </div>
-            {paymentMethod === 'payNow' && (
+            {bookingInfo.paymentMethod === 'payNow' && (
               <div className="mt-4">
                 <h3 className="text-xl font-semibold mb-2">Card Details</h3>
                 <div className="mb-4">
@@ -259,7 +290,7 @@ function Booking() {
               <h3 className="text-lg font-semibold text-emerald-800">Final Booking Summary</h3>
               <p>Check-in: {checkInDate}</p>
               <p>Check-out: {checkOutDate}</p>
-              <p>Room: {roomTypes.find(room => room._id === selectedRoom)?.name}</p>
+              <p>Room: {roomTypes.find(room => room._id === selectedRoom)?.roomType}</p>
               <p>Capacity: {roomTypes.find(room => room._id === selectedRoom)?.capacity} guests</p>
               <p>Amenities: {roomTypes.find(room => room._id === selectedRoom)?.amenities.join(', ')}</p>
               <p className="font-bold">Total Price: ${totalPrice}</p>
@@ -312,6 +343,7 @@ function Booking() {
               </button>
             ) : (
               <button 
+                onClick={handleBooking}
                 className={`px-4 py-2 ${isNextDisabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700'} text-white rounded transition-colors`}
                 disabled={isNextDisabled}
               >

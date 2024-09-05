@@ -179,7 +179,7 @@ function ManageRooms() {
               >
                 <td className="py-3 px-4">{room.roomNumber}</td>
                 <td className="py-3 px-4">{room.floor}</td>
-                <td className="py-3 px-4">{room.roomType && room.roomType.roomType}</td>
+                <td className="py-3 px-4">{room.roomType && room.roomType.roomName}</td>
                 <td className="py-3 px-4">
                   <button
                     onClick={() => handleEdit(room._id)}
@@ -278,7 +278,7 @@ function ManageRooms() {
                   >
                     <option value="">Select a room type</option>
                     {roomTypes.map((type) => (
-                      <option key={type._id} value={type._id}>{type.roomType}</option>
+                      <option key={type._id} value={type._id}>{type.roomName}</option>
                     ))}
                   </select>
                 </div>

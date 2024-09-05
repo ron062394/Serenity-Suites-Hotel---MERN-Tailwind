@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaUsers, FaHotel, FaCalendarAlt, FaChartLine, FaBell, FaSearch, FaDownload, FaTachometerAlt, FaSignOutAlt, FaBook, FaDoorOpen, FaUserCheck, FaBed } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import ManageBookings from './ManageBookings';
+import ManageBookings from './Rooms';
 import ManageRooms from './ManageRooms';
 import ManageUsers from './ManageUsers';
 import Notifications from './Notifications';
