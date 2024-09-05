@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Room = require('../models/Room');
 const BookRequest = require('../models/Booking');
+const RoomType = require('../models/roomType');
 
 // Create a new booking request
 const createBookRequest = async (req, res) => {
@@ -31,12 +32,9 @@ const updateBookingStatus = async (req, res) => {
     }
 };
 
-
-
 const confirmBooking = async (req, res) => {
     const { id } = req.params; // Booking ID
-    const { room } = req.body; // Room ID
-
+    const { room, roomType } = req.body; // Room ID and Room Type ID
     try {
         // Find the booking request
         const booking = await BookRequest.findById(id);
@@ -58,12 +56,18 @@ const confirmBooking = async (req, res) => {
             return res.status(400).json({ error: 'Room is not available' });
         }
 
+        // Get room type details
+        const roomTypeDetails = await RoomType.findById(roomType);
+        if (!roomTypeDetails) {
+            return res.status(404).json({ error: 'Room type not found' });
+        }
+
         // Update the booking request
         booking.status = 'confirmed';
         booking.room = room;
-        booking.roomNumber = roomUpdate.roomNumber; // Retrieve room number from room
-        booking.price = roomUpdate.price; // Retrieve room price from room
-        booking.roomType = roomUpdate.type; // Retrieve room type from room
+        booking.roomNumber = roomUpdate.roomNumber;
+        booking.price = roomTypeDetails.price;
+        booking.roomType = roomTypeDetails.roomName;
         await booking.save();
 
         // Update the room
@@ -76,7 +80,6 @@ const confirmBooking = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
-
 
 // Check in a guest
 const checkInGuest = async (req, res) => {
@@ -111,7 +114,6 @@ const checkInGuest = async (req, res) => {
     }
 };
 
-
 const checkoutGuest = async (req, res) => {
     const { id } = req.params; // Booking ID
 
@@ -145,7 +147,6 @@ const checkoutGuest = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
-
 
 const cancelBooking = async (req, res) => {
     const { id } = req.params; // Booking ID
@@ -183,7 +184,6 @@ const cancelBooking = async (req, res) => {
     }
 };
 
-
 // Get all booking requests
 const getAllBookRequests = async (req, res) => {
     try {
@@ -193,6 +193,27 @@ const getAllBookRequests = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+// Get all bookings with status not "checked-out"
+const getAllAvailableBookings = async (req, res) => {
+    try {
+        const bookRequests = await BookRequest.find({ status: { $ne: 'checked-out' } });
+        res.status(200).json(bookRequests);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+// Get all bookings ascending order
+const getAllBookingsAscending = async (req, res) => {
+    try {
+        const bookRequests = await BookRequest.find({}).sort({ checkInTime: 1 });
+        res.status(200).json(bookRequests);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 
 // Get a specific booking request
 const getBookRequestById = async (req, res) => {
@@ -246,5 +267,7 @@ module.exports = {
     confirmBooking,
     checkInGuest,
     checkoutGuest,
-    cancelBooking
+    cancelBooking,
+    getAllAvailableBookings,
+    getAllBookingsAscending
 };

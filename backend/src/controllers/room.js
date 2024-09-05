@@ -3,7 +3,7 @@ const Room = require('../models/Room');
 // Get all rooms
 const getAllRooms = async (req, res) => {
     try {
-        const rooms = await Room.find({});
+        const rooms = await Room.find({}).populate('roomType');
         res.status(200).json(rooms);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -14,7 +14,7 @@ const getAllRooms = async (req, res) => {
 const getRoom = async (req, res) => {
     const { id } = req.params;
     try {
-        const room = await Room.findById(id).populate('booking');
+        const room = await Room.findById(id).populate('roomType').populate('booking');
         if (!room) {
             return res.status(404).json({ error: 'Room not found' });
         }
@@ -24,12 +24,11 @@ const getRoom = async (req, res) => {
     }
 };
 
-
 // Create a new room
 const createRoom = async (req, res) => {
-    const { roomNumber, type, amenities, price, status, imageSrc } = req.body;
+    const { roomNumber, roomType, status, floor } = req.body;
     try {
-        const room = await Room.create({ roomNumber, type, amenities, price, status, imageSrc });
+        const room = await Room.create({ roomNumber, roomType, status, floor });
         res.status(201).json(room);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -40,7 +39,9 @@ const createRoom = async (req, res) => {
 const updateRoom = async (req, res) => {
     const { id } = req.params;
     try {
-        const room = await Room.findOneAndUpdate({ _id: id }, { ...req.body }, { new: true }).populate('booking');
+        const room = await Room.findOneAndUpdate({ _id: id }, { ...req.body }, { new: true })
+            .populate('roomType')
+            .populate('booking');
         if (!room) {
             return res.status(404).json({ error: 'Room not found' });
         }
@@ -49,7 +50,6 @@ const updateRoom = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
-
 
 // Delete a room
 const deleteRoom = async (req, res) => {

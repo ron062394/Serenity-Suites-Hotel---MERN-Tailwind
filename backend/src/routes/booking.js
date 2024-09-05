@@ -7,7 +7,12 @@ const {
     getBookRequestById,
     updateBookRequest,
     deleteBookRequest,
-    confirmBooking
+    confirmBooking,
+    checkInGuest,
+    checkoutGuest,
+    cancelBooking,
+    getAllAvailableBookings,
+    getAllBookingsAscending
 } = require('../controllers/booking');
 
 // Create a new booking request
@@ -15,6 +20,8 @@ router.post('/', createBookRequest);
 
 // Get all booking requests
 router.get('/', getAllBookRequests);
+router.get('/available', getAllAvailableBookings);
+router.get('/ascending', getAllBookingsAscending);
 
 // Get a specific booking request by ID
 router.get('/:id', getBookRequestById);
