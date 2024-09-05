@@ -335,7 +335,7 @@ function Booking() {
       ></div>
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 max-w-3xl w-full mx-auto bg-white bg-opacity-90 shadow-xl rounded-lg overflow-hidden">
-        <div className="bg-emerald-600 text-white py-4 px-6">
+        <div className="bg-emerald-800 text-white py-4 px-6">
           <h1 className="text-3xl font-bold">Book Your Stay</h1>
         </div>
         <div className="p-6">
