@@ -1,31 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaWifi, FaTv, FaCoffee, FaConciergeBell, FaBath } from 'react-icons/fa';
+import { FaWifi, FaTv, FaSnowflake, FaGlassMartiniAlt, FaParking, FaDumbbell, FaSwimmer, FaConciergeBell, FaUmbrellaBeach, FaHotTub, FaTree, FaLaptop } from 'react-icons/fa';
 
 function RoomDetails() {
   const { id } = useParams();
   const [room, setRoom] = useState(null);
+  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
-    // Simulating API call to fetch room details
     const fetchRoomDetails = async () => {
-      // Replace this with actual API call
-      const mockRoom = {
-        id: id,
-        name: 'Deluxe Ocean View Suite',
-        description: 'Experience luxury with breathtaking ocean views in our spacious Deluxe Suite.',
-        price: 450,
-        capacity: 2,
-        size: '50 sq m',
-        amenities: ['Free Wi-Fi', 'Smart TV', 'Mini Bar', '24/7 Room Service', 'Luxury Bathroom'],
-        images: [
-          'https://source.unsplash.com/random/800x600?luxury,hotel,room1',
-          'https://source.unsplash.com/random/800x600?luxury,hotel,room2',
-          'https://source.unsplash.com/random/800x600?luxury,hotel,room3',
-        ],
-      };
-      setRoom(mockRoom);
+      try {
+        const response = await fetch(`http://localhost:3001/api/roomTypes/${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch room details');
+        }
+        const data = await response.json();
+        setRoom(data);
+      } catch (error) {
+        console.error('Error fetching room details:', error);
+      }
     };
 
     fetchRoomDetails();
@@ -41,74 +35,98 @@ function RoomDetails() {
   }
 
   return (
-    <div className="bg-gray-50 relative">
+    <div className="bg-gray-50 relative min-h-screen pt-24"> {/* Added mt-16 for top margin */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed"
         style={{
           backgroundImage: `url('https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?cs=srgb&dl=pexels-thorsten-technoman-109353-338504.jpg&fm=jpg')`,
         }}
       ></div>
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="relative z-10">
-        <div className="container mx-auto px-4 py-24">
-          <motion.h1 
-            className="text-4xl font-bold mb-12 text-white text-center"
+      <div className="absolute inset-0 bg-black opacity-60"></div>
+      <div className="relative z-10 container mx-auto px-4 py-12">
+        <motion.h1 
+          className="text-5xl font-bold mb-8 text-white text-center"
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+        >
+          {room.roomName}
+        </motion.h1>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <motion.div 
+            className="lg:col-span-2 space-y-6"
             initial="hidden"
             animate="visible"
             variants={fadeInUp}
           >
-            {room.name}
-          </motion.h1>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <motion.div 
-              className="space-y-6"
-              initial="hidden"
-              animate="visible"
-              variants={fadeInUp}
-            >
-              <img src={room.images[0]} alt={room.name} className="w-full h-96 object-cover rounded-lg shadow-lg" />
-              <div className="grid grid-cols-3 gap-4">
-                {room.images.slice(1).map((image, index) => (
-                  <img key={index} src={image} alt={`${room.name} ${index + 2}`} className="w-full h-32 object-cover rounded-lg shadow-md" />
+            <div className="relative">
+              <img 
+                src={room.images[activeImage]} 
+                alt={room.roomName} 
+                className="w-full h-[500px] object-cover rounded-lg shadow-2xl transition-all duration-500 ease-in-out"
+              />
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {room.images.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`w-3 h-3 rounded-full ${index === activeImage ? 'bg-white' : 'bg-gray-400'}`}
+                    onClick={() => setActiveImage(index)}
+                  />
                 ))}
               </div>
-            </motion.div>
+            </div>
+            <div className="grid grid-cols-4 gap-4">
+              {room.images.map((image, index) => (
+                <img 
+                  key={index} 
+                  src={image} 
+                  alt={`${room.name} ${index + 1}`} 
+                  className={`w-full h-24 object-cover rounded-lg shadow-md cursor-pointer transition-all duration-300 ${index === activeImage ? 'ring-4 ring-emerald-500' : 'hover:opacity-75'}`}
+                  onClick={() => setActiveImage(index)}
+                />
+              ))}
+            </div>
+          </motion.div>
 
-            <motion.div 
-              className="space-y-6"
-              initial="hidden"
-              animate="visible"
-              variants={fadeInUp}
+          <motion.div 
+            className="space-y-8"
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+          >
+            <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-xl">
+              <h2 className="text-3xl font-semibold mb-4 text-emerald-800">Room Overview</h2>
+              <p className="text-lg text-emerald-700 mb-6">{room.description}</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center text-emerald-700">
+                  <FaGlassMartiniAlt className="text-2xl mr-2" />
+                  <span>${room.price} per night</span>
+                </div>
+                <div className="flex items-center text-emerald-700">
+                  <FaUmbrellaBeach className="text-2xl mr-2" />
+                  <span>{room.capacity} guests</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-xl">
+              <h2 className="text-3xl font-semibold mb-4 text-emerald-800">Amenities</h2>
+              <ul className="grid grid-cols-2 gap-4">
+                {room.amenities.map((amenity, index) => (
+                  <li key={index} className="flex items-center text-emerald-700">
+                    {getAmenityIcon(amenity)}
+                    <span className="ml-2">{amenity}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <Link 
+              to="/booking" 
+              className="block w-full text-center px-8 py-4 text-xl font-semibold text-white bg-emerald-600 rounded-lg shadow-xl hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105"
             >
-              <p className="text-xl text-white">{room.description}</p>
-              <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold mb-4 text-emerald-800">Room Details</h2>
-                <ul className="space-y-2 text-emerald-700">
-                  <li>Price: ${room.price} per night</li>
-                  <li>Capacity: {room.capacity} guests</li>
-                  <li>Size: {room.size}</li>
-                </ul>
-              </div>
-              <div className="bg-white bg-opacity-80 p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold mb-4 text-emerald-800">Amenities</h2>
-                <ul className="grid grid-cols-2 gap-4">
-                  {room.amenities.map((amenity, index) => (
-                    <li key={index} className="flex items-center text-emerald-700">
-                      {getAmenityIcon(amenity)}
-                      <span className="ml-2">{amenity}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <Link 
-                to="/booking" 
-                className="inline-block px-8 py-3 text-lg font-semibold text-white bg-emerald-600 rounded-md shadow-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out transform hover:scale-105"
-              >
-                Book Now
-              </Link>
-            </motion.div>
-          </div>
+              Book Now
+            </Link>
+          </motion.div>
         </div>
       </div>
     </div>
@@ -117,18 +135,32 @@ function RoomDetails() {
 
 function getAmenityIcon(amenity) {
   switch (amenity.toLowerCase()) {
-    case 'free wi-fi':
-      return <FaWifi />;
-    case 'smart tv':
-      return <FaTv />;
+    case 'wi-fi':
+      return <FaWifi className="text-2xl" />;
+    case 'tv':
+      return <FaTv className="text-2xl" />;
+    case 'air conditioning':
+      return <FaSnowflake className="text-2xl" />;
     case 'mini bar':
-      return <FaCoffee />;
-    case '24/7 room service':
-      return <FaConciergeBell />;
-    case 'luxury bathroom':
-      return <FaBath />;
+      return <FaGlassMartiniAlt className="text-2xl" />;
+    case 'parking':
+      return <FaParking className="text-2xl" />;
+    case 'gym':
+      return <FaDumbbell className="text-2xl" />;
+    case 'swimming pool':
+      return <FaSwimmer className="text-2xl" />;
+    case 'room service':
+      return <FaConciergeBell className="text-2xl" />;
+    case 'private balcony':
+      return <FaUmbrellaBeach className="text-2xl" />;
+    case 'jacuzzi':
+      return <FaHotTub className="text-2xl" />;
+    case 'private garden':
+      return <FaTree className="text-2xl" />;
+    case 'workspace':
+      return <FaLaptop className="text-2xl" />;
     default:
-      return null;
+      return <FaConciergeBell className="text-2xl" />;
   }
 }
 

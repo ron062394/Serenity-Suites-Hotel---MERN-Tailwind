@@ -6,9 +6,9 @@ import { FaWineGlassAlt, FaCocktail, FaUtensilSpoon } from 'react-icons/fa';
 
 function Dining() {
   const diningOptions = [
-    { id: 1, name: 'Gourmet Restaurant', description: 'Experience fine dining with our Michelin-starred chefs.', icon: <MdRestaurant />, image: 'https://source.unsplash.com/random/800x600?gourmet,restaurant' },
-    { id: 2, name: 'Rooftop Bar', description: 'Enjoy breathtaking views with handcrafted cocktails.', icon: <MdLocalBar />, image: 'https://source.unsplash.com/random/800x600?rooftop,bar' },
-    { id: 3, name: 'In-Room Dining', description: 'Savor exquisite meals in the comfort of your room.', icon: <MdRoomService />, image: 'https://source.unsplash.com/random/800x600?room,service' },
+    { id: 1, name: 'Gourmet Restaurant', description: 'Experience fine dining with our Michelin-starred chefs.', icon: <MdRestaurant />, image: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/1e/e3/96/baraka-restaurant.jpg?w=1200&h=-1&s=1' },
+    { id: 2, name: 'Rooftop Bar', description: 'Enjoy breathtaking views with handcrafted cocktails.', icon: <MdLocalBar />, image: 'https://moxyeastvillage.com/content/uploads/sites/5/2021/04/IMG_6298-1.jpg' },
+    { id: 3, name: 'In-Room Dining', description: 'Savor exquisite meals in the comfort of your room.', icon: <MdRoomService />, image: 'https://images.squarespace-cdn.com/content/v1/5a74702ce45a7cd601df944b/1619081310495-24HJYGFI7DYQ73O95WYF/hotel-room-service.jpg' },
   ];
 
   const culinaryExperiences = [
@@ -86,12 +86,16 @@ function Dining() {
         </section>
 
         <section className="py-12 sm:py-16 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 md:mb-8 text-white">Make a Reservation</h2>
-            <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-white">Secure your table at one of our exquisite dining venues.</p>
-            <Link to="/dining-reservation" className="inline-block px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base md:text-lg font-semibold text-white bg-amber-600 rounded-md shadow-lg hover:bg-amber-700 transition-all duration-300 ease-in-out transform hover:scale-105">
-              Reserve Now
-            </Link>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white bg-opacity-80 rounded-lg shadow-lg p-6 sm:p-8 md:p-10 text-center">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 md:mb-8 text-emerald-800">Contact Us</h2>
+              <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-emerald-700">For reservations and inquiries, please reach out to us:</p>
+              <div className="text-base sm:text-lg md:text-xl text-emerald-700">
+                <p className="mb-4"><strong>Phone:</strong> (123) 456-7890</p>
+                <p className="mb-4"><strong>Email:</strong> reservations@serenitysuites.com</p>
+                <p className="mb-4"><strong>Address:</strong> 123 Serenity Lane, Tranquil City, TX 78901</p>
+              </div>
+            </div>
           </div>
         </section>
       </div>

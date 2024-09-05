@@ -169,7 +169,16 @@ function AdminDashboard() {
   return (
     <div className="bg-gray-100 min-h-screen flex">
       <nav className="bg-emerald-800 text-white w-64 min-h-screen p-6">
-        <h1 className="text-3xl font-bold mb-10">Serenity Suites</h1>
+            <motion.div 
+              className="font-serif text-3xl text-white mb-10"
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+            >
+              <span className="italic">Serenity</span>
+              <span className="text-amber-500 italic">Suites</span>
+            </motion.div>
+        
         <ul className="space-y-4">
           {[
             { name: 'Overview', icon: <FaTachometerAlt />, tab: 'overview' },

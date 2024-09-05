@@ -131,7 +131,7 @@ function Rooms() {
           {rooms[activeFloor] && rooms[activeFloor].map((room) => (
             <motion.div 
               key={room._id} 
-              className={`bg-white shadow-md rounded-lg overflow-hidden cursor-pointer ${
+              className={`bg-white shadow-md rounded-lg overflow-hidden cursor-pointer border border-gray-200 ${
                 room.status === 'available' ? 'hover:shadow-lg' : ''
               }`}
               whileHover={{ scale: 1.03 }}

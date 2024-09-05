@@ -235,8 +235,8 @@ function RoomType() {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
                       {newRoomType.images.map((image, index) => (
-                        <div key={index} className="relative group">
-                          <img src={image} alt={`Room ${index + 1}`} className="w-full h-32 object-cover rounded" />
+                        <div key={index} className="relative group border border-gray-300 rounded">
+                          <img src={image} alt={`Room ${index + 1}`} className="w-full h-32 object-cover rounded group-hover:opacity-75 transition-opacity duration-200" />
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(index)}
@@ -309,11 +309,11 @@ function RoomType() {
         )}
       </AnimatePresence>
 
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-gray-300">
         <h3 className="text-xl font-bold mb-4">Existing Room Types</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {roomTypes.map((roomType) => (
-            <div key={roomType._id} className="bg-gray-100 rounded-lg p-4 shadow">
+            <div key={roomType._id} className="bg-gray-100 rounded-lg p-4 shadow border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
               <div className="flex justify-between items-start mb-2">
                 <h4 className="text-lg font-semibold">{roomType.roomName}</h4>
                 <div>
@@ -346,7 +346,7 @@ function RoomType() {
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {roomType.images.map((image, index) => (
-                  <img key={index} src={image} alt={`${roomType.roomName} ${index + 1}`} className="w-full h-20 object-cover rounded" />
+                  <img key={index} src={image} alt={`${roomType.roomName} ${index + 1}`} className="w-full h-20 object-cover rounded border border-gray-300 hover:opacity-75 transition-opacity duration-200" />
                 ))}
               </div>
             </div>

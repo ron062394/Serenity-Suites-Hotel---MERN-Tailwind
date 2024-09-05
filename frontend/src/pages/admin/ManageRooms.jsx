@@ -8,7 +8,9 @@ function ManageRooms() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [existingRoomNumbers, setExistingRoomNumbers] = useState([]);
   const [roomTypes, setRoomTypes] = useState([]);
-  
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editRoomId, setEditRoomId] = useState(null);
+
   const [newRoom, setNewRoom] = useState({
     roomNumber: '',
     roomType: '',
@@ -63,15 +65,34 @@ function ManageRooms() {
     }
   };
 
-  const handleEdit = (id) => {
-    console.log(`Edit room ${id}`);
+  const handleEdit = (room) => {
+    setIsEditMode(true);
+    setEditRoomId(room._id);
+    setNewRoom({
+      roomNumber: room.roomNumber,
+      roomType: room.roomType._id,
+      status: room.status,
+      floor: room.floor,
+    });
+    setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    console.log(`Delete room ${id}`);
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/rooms/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete room');
+      }
+      fetchRooms(); // Refresh the rooms list
+    } catch (error) {
+      console.error('Error deleting room:', error);
+    }
   };
 
   const handleAddRoom = () => {
+    setIsEditMode(false);
     setIsModalOpen(true);
   };
 
@@ -96,15 +117,15 @@ function ManageRooms() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (existingRoomNumbers.includes(newRoom.roomNumber)) {
+    if (existingRoomNumbers.includes(newRoom.roomNumber) && !isEditMode) {
       alert('Room number already exists. Please choose a different room number.');
       return;
     }
     console.log('New room:', newRoom);
 
     try {
-      const response = await fetch("http://localhost:3001/api/rooms", {
-        method: "POST",
+      const response = await fetch(`http://localhost:3001/api/rooms${isEditMode ? `/${editRoomId}` : ''}`, {
+        method: isEditMode ? 'PATCH' : 'POST',
         headers: {
           "Content-Type": "application/json",
         },
@@ -112,13 +133,13 @@ function ManageRooms() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to add room");
+        throw new Error(`Failed to ${isEditMode ? 'update' : 'add'} room`);
       }
       handleCloseModal();
       fetchRooms(); // Refresh the rooms list
       
     } catch (error) {
-      console.error("Error adding room:", error.message);
+      console.error(`Error ${isEditMode ? 'updating' : 'adding'} room:`, error.message);
     }
   };
 
@@ -182,7 +203,7 @@ function ManageRooms() {
                 <td className="py-3 px-4">{room.roomType && room.roomType.roomName}</td>
                 <td className="py-3 px-4">
                   <button
-                    onClick={() => handleEdit(room._id)}
+                    onClick={() => handleEdit(room)}
                     className="text-blue-600 hover:text-blue-800 mr-2"
                   >
                     <FaEdit />
@@ -215,7 +236,7 @@ function ManageRooms() {
               exit={{ y: -50, opacity: 0 }}
             >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold">Add New Room</h3>
+                <h3 className="text-xl font-bold">{isEditMode ? 'Edit Room' : 'Add New Room'}</h3>
                 <button onClick={handleCloseModal} className="text-gray-500 hover:text-gray-700">
                   <FaTimes />
                 </button>
@@ -287,7 +308,7 @@ function ManageRooms() {
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit"
                   >
-                    Add Room
+                    {isEditMode ? 'Update Room' : 'Add Room'}
                   </button>
                 </div>
               </form>

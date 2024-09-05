@@ -107,9 +107,9 @@ function HomePage() {
           <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 text-center text-emerald-800">Exquisite Accommodations</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12">
             {[
-              { name: 'Royal Suite', description: 'Indulge in opulence with panoramic views', icon: <FaCocktail />, image: 'https://www.theplazany.com/wp-content/uploads/2016/02/DSC_3020-scaled.jpg' },
-              { name: 'Zen Garden Room', description: 'Find peace in nature-inspired luxury', icon: <MdLocalFlorist />, image: 'https://spacesmag.com/wp-content/uploads/2022/02/46.webp' },
-              { name: 'Skyline Penthouse', description: 'Experience urban elegance at its finest', icon: <FaConciergeBell />, image: 'https://image-tc.galaxy.tf/wijpeg-b87cxl0q3gmcsm0jrbnnfwkvb/web-nylo-king-city-view-1_standard.jpg?crop=106%2C0%2C1688%2C1266' },
+              { name: 'Royal Suite', description: 'Indulge in opulence with panoramic views', icon: <FaCocktail />, image: 'https://i.pinimg.com/originals/a4/33/f5/a433f556def0e5a4e81456dec117419c.jpg' },
+              { name: 'Zen Garden Room', description: 'Find peace in nature-inspired luxury', icon: <MdLocalFlorist />, image: 'https://t3.ftcdn.net/jpg/08/14/47/24/360_F_814472486_Y7EFA18zcmyjmEidwodqFlHrEE4Ndnk7.jpg' },
+              { name: 'Skyline Penthouse', description: 'Experience urban elegance at its finest', icon: <FaConciergeBell />, image: 'https://aluplex.com/wp-content/uploads/2020/11/Penthouse-Suite-Skylights-and-Why-Your-Hotel-Needs-Them-1024x576.jpg' },
             ].map((room, index) => (
               <motion.div 
                 key={index} 
