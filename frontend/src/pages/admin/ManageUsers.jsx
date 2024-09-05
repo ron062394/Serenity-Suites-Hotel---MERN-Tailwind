@@ -8,23 +8,44 @@ function ManageUsers() {
   const [activeTab, setActiveTab] = useState('admin');
 
   useEffect(() => {
-    // Fetch users from API
-    const fetchUsers = async () => {
-      // Replace with actual API call
-      const response = await fetch('/api/users');
-      const data = await response.json();
-      setUsers(data);
-    };
-
     fetchUsers();
   }, []);
 
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/users', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
   const handleDeleteUser = async (userId) => {
-    // Implement delete user logic
     if (window.confirm('Are you sure you want to delete this user?')) {
-      // Replace with actual API call
-      await fetch(`/api/users/${userId}`, { method: 'DELETE' });
-      setUsers(users.filter(user => user.id !== userId));
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`https://serenity-suites-api.vercel.app/api/users/${userId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to delete user');
+        }
+        setUsers(users.filter(user => user._id !== userId));
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
     }
   };
 
@@ -68,7 +89,7 @@ function ManageUsers() {
           <tbody>
             {filteredUsers.map((user) => (
               <motion.tr 
-                key={user.id}
+                key={user._id}
                 whileHover={{ backgroundColor: '#f0fdf4' }}
                 className="border-b border-gray-200"
               >
@@ -76,10 +97,10 @@ function ManageUsers() {
                 <td className="py-3 px-4">{user.email}</td>
                 <td className="py-3 px-4">{user.role}</td>
                 <td className="py-3 px-4">
-                  <Link to={`/admin/users/${user.id}/edit`} className="text-blue-600 hover:text-blue-800 mr-3">
+                  <Link to={`/admin/users/${user._id}/edit`} className="text-blue-600 hover:text-blue-800 mr-3">
                     <FaEdit className="inline-block" />
                   </Link>
-                  <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-800">
+                  <button onClick={() => handleDeleteUser(user._id)} className="text-red-600 hover:text-red-800">
                     <FaTrash className="inline-block" />
                   </button>
                 </td>

@@ -17,4 +17,10 @@ router.put('/users/:userId', authMiddleware, updateUser);
 // User login
 router.post('/login', login);
 
+// Get all users
+router.get('/users', authMiddleware, getAllUsers);
+
+// Delete user
+router.delete('/users/:userId', authMiddleware, deleteUser);
+
 module.exports = router;

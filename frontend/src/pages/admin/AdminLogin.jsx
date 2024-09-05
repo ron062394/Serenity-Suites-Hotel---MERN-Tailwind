@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaLock, FaUser } from 'react-icons/fa';
 
@@ -9,15 +9,30 @@ function AdminLogin() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically make an API call to verify the admin credentials
-    // For this example, we'll use a simple check
-    if (username === 'admin' && password === 'password') {
-      // Successful login
-      navigate('/admin/dashboard');
-    } else {
-      setError('Invalid username or password');
+    setError('');
+
+    try {
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        navigate('/admin/');
+      } else {
+        setError(data.error || 'Login failed');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
     }
   };
 
@@ -49,6 +64,7 @@ function AdminLogin() {
                 placeholder="Enter your username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                required
               />
             </div>
           </div>
@@ -65,23 +81,18 @@ function AdminLogin() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
           </div>
           {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center">
             <button
               className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105"
               type="submit"
             >
               Sign In
             </button>
-            <Link
-              className="inline-block align-baseline font-bold text-sm text-emerald-600 hover:text-emerald-800"
-              to="/forgot-password"
-            >
-              Forgot Password?
-            </Link>
           </div>
         </form>
       </motion.div>

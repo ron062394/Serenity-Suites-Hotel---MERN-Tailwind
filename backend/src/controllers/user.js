@@ -132,8 +132,47 @@ const updateUser = async (req, res) => {
     }
 };  
 
-module.exports = {
+// Get all users
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Delete user
+const deleteUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Check if user making the request is an admin
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Only administrators can delete users' });
+        }
+
+        // Check if user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Delete user
+        await user.deleteOne();
+
+        res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+    module.exports = {
     createUser,
     login,  
-    updateUser
+    updateUser,
+    getAllUsers,
+    deleteUser
 };
