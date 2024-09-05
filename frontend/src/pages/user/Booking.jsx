@@ -89,9 +89,16 @@ function Booking() {
         const checkOut = new Date(bookingInfo.checkOutDate);
         const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
         setTotalPrice(selectedRoomType.price * nights);
+        setSelectedRoom(selectedRoomType._id);
+        setCheckInDate(bookingInfo.checkInDate);
+        setCheckOutDate(bookingInfo.checkOutDate);
       }
     }
   }, [bookingInfo.roomName, bookingInfo.checkInDate, bookingInfo.checkOutDate, roomTypes]);
+
+  useEffect(() => {
+    setPaymentMethod(bookingInfo.paymentMethod);
+  }, [bookingInfo.paymentMethod]);
 
   const renderAmenityIcon = (amenity) => {
     switch (amenity.toLowerCase()) {
