@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware');
 const {
     createBookRequest,
     updateBookingStatus,
@@ -16,29 +17,29 @@ const {
 } = require('../controllers/booking');
 
 // Create a new booking request
-router.post('/', createBookRequest);
+router.post('/', authMiddleware, createBookRequest);
 
 // Get all booking requests
-router.get('/', getAllBookRequests);
-router.get('/available', getAllAvailableBookings);
-router.get('/ascending', getAllBookingsAscending);
+router.get('/', authMiddleware, getAllBookRequests);
+router.get('/available', authMiddleware, getAllAvailableBookings);
+router.get('/ascending', authMiddleware, getAllBookingsAscending);
 
 // Get a specific booking request by ID
-router.get('/:id', getBookRequestById);
+router.get('/:id', authMiddleware, getBookRequestById);
 
 // Update a booking request by ID
-router.patch('/:id', updateBookRequest);
+router.patch('/:id', authMiddleware, updateBookRequest);
 
 // Update the status of a booking request
-router.patch('/confirm/:id', confirmBooking);
-router.patch('/checkin/:id', checkInGuest);
-router.patch('/checkout/:id', checkoutGuest);
-router.patch('/cancel/:id', cancelBooking);
+router.patch('/confirm/:id', authMiddleware, confirmBooking);
+router.patch('/checkin/:id', authMiddleware, checkInGuest);
+router.patch('/checkout/:id', authMiddleware, checkoutGuest);
+router.patch('/cancel/:id', authMiddleware, cancelBooking);
 
 // Delete a booking request by ID
-router.delete('/:id', deleteBookRequest);
+router.delete('/:id', authMiddleware, deleteBookRequest);
 
 // Update the status of a booking request
-router.patch('/:id/status', updateBookingStatus);
+router.patch('/:id/status', authMiddleware, updateBookingStatus);
 
 module.exports = router;
