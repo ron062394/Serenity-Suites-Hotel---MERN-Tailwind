@@ -5,7 +5,8 @@ const {
     getRoom,
     createRoom,
     updateRoom,
-    deleteRoom
+    deleteRoom,
+    changeRoomStatus
 } = require('../controllers/room');
 
 // Get all rooms
@@ -19,6 +20,7 @@ router.post('/', createRoom);
 
 // Update a room
 router.patch('/:id', updateRoom);
+router.patch('/:id/status', changeRoomStatus);
 
 // Delete a room
 router.delete('/:id', deleteRoom);

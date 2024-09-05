@@ -51,6 +51,24 @@ const updateRoom = async (req, res) => {
     }
 };
 
+// Change the status of a room
+const changeRoomStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        const room = await Room.findByIdAndUpdate(id, { status }, { new: true })
+            .populate('roomType')
+            .populate('booking');
+        if (!room) {
+            return res.status(404).json({ error: 'Room not found' });
+        }
+        res.status(200).json(room);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
 // Delete a room
 const deleteRoom = async (req, res) => {
     const { id } = req.params;
@@ -70,5 +88,6 @@ module.exports = {
     getRoom,
     createRoom,
     updateRoom,
-    deleteRoom
+    deleteRoom,
+    changeRoomStatus
 };
