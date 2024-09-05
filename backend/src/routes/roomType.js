@@ -13,7 +13,7 @@ const {
 router.post('/', authMiddleware, createRoomType);
 
 // Get all room types
-router.get('/', authMiddleware, getAllRoomTypes);
+router.get('/', getAllRoomTypes);
 
 // Get a single room type by ID
 router.get('/:id', authMiddleware, getRoomTypeById);
