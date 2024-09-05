@@ -30,7 +30,6 @@ app.get('/', (req, res) => {
 
 
 //middleware
-app.use(express.json());
 app.use((req, res, next)=> {
     console.log(req.path, req.method);
     if (req.body) {
@@ -43,9 +42,12 @@ app.use((req, res, next)=> {
 
 
 // Routes
-app.use('/api/rooms', require('./src/routes/room'));
-app.use('/api/bookings', require('./src/routes/booking'));
-app.use('/api/roomTypes', require('./src/routes/roomType'));
+  app.use('/api/rooms', require('./src/routes/room'));
+  app.use('/api/bookings', require('./src/routes/booking'));
+  app.use('/api/roomTypes', require('./src/routes/roomType'));
+  app.use('/api/admin', require('./src/routes/user'));
+
+
 
 
 
