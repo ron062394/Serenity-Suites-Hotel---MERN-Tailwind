@@ -18,8 +18,14 @@ function AdminDashboard() {
   const [checkedInGuests, setCheckedInGuests] = useState(0);
   const [recentNotifications, setRecentNotifications] = useState([]);
   const navigate = useNavigate();
-  const { dispatch } = useAuthContext();
+  const { user, dispatch } = useAuthContext();
   
+  useEffect(() => {
+    if (!user) {
+      navigate('/admin/login');
+    }
+  }, [user, navigate]);
+
   useEffect(() => {
     // Simulating API call to fetch revenue data
     const fetchRevenueData = () => {
@@ -71,10 +77,9 @@ function AdminDashboard() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('user');
     dispatch({ type: 'LOGOUT' });
-    // Implement logout logic here
-    // For example, clear local storage, reset auth state, etc.
-    navigate('/admin/login'); // Redirect to admin login page
+    navigate('/admin/login');
   };
 
   const renderContent = () => {

@@ -20,7 +20,12 @@ function RoomType() {
 
   const fetchRoomTypes = async () => {
     try {
-      const response = await fetch('https://serenity-suites-api.vercel.app/api/roomTypes');
+      const token = localStorage.getItem('token');
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/roomTypes', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch room types');
       }
@@ -40,6 +45,7 @@ function RoomType() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('token');
       const url = editingId
         ? `https://serenity-suites-api.vercel.app/api/roomTypes/${editingId}`
         : 'https://serenity-suites-api.vercel.app/api/roomTypes';
@@ -48,6 +54,7 @@ function RoomType() {
         method: method,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(newRoomType),
       });
@@ -80,8 +87,12 @@ function RoomType() {
 
   const handleDelete = async (id) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`https://serenity-suites-api.vercel.app/api/roomTypes/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       if (!response.ok) {
         throw new Error('Failed to delete room type');

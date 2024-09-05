@@ -4,8 +4,10 @@ import { FaSearch, FaBed, FaCheckCircle, FaSignOutAlt, FaTimes, FaCalendarAlt, F
 import BookDetails from './BookDetails';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 function BookingLog() {
+  const { user } = useAuthContext();
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,45 +22,58 @@ function BookingLog() {
   const [isBookDetailsOpen, setIsBookDetailsOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch bookings from API
-    const fetchBookings = async () => {
-      try {
-        const response = await fetch('https://serenity-suites-api.vercel.app/api/bookings/ascending');
-        if (!response.ok) {
-          throw new Error('Failed to fetch bookings');
-        }
-        const data = await response.json();
-        setBookings(data);
-        setFilteredBookings(data);
-        console.log('Bookings data:', data);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-        toast.error('Failed to fetch bookings');
-      }
-    };
-
-    // Fetch rooms from API
-    const fetchRooms = async () => {
-      try {
-        const response = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
-        if (!response.ok) {
-          throw new Error('Failed to fetch rooms');
-        }
-        const data = await response.json();
-        setRooms(data);
-        console.log('Rooms data:', data);
-      } catch (error) {
-        console.error('Error fetching rooms:', error);
-        toast.error('Failed to fetch rooms');
-      }
-    };
-
     fetchBookings();
     fetchRooms();
   }, []);
 
+  const fetchBookings = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/bookings/ascending', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch bookings');
+      }
+      const data = await response.json();
+      setBookings(data);
+      setFilteredBookings(data);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      toast.error('Failed to fetch bookings');
+    }
+  };
+
+  const fetchRooms = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/rooms', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch rooms');
+      }
+      const data = await response.json();
+      setRooms(data);
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+      toast.error('Failed to fetch rooms');
+    }
+  };
+
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+    const filtered = bookings.filter(booking => 
+      booking.firstName.toLowerCase().includes(term) ||
+      booking.lastName.toLowerCase().includes(term) ||
+      (booking.roomNumber && booking.roomNumber.toString().includes(term))
+    );
+    setFilteredBookings(filtered);
   };
 
   const handleAssignRoom = (booking) => {
@@ -101,9 +116,11 @@ function BookingLog() {
     if (!selectedRoom) return;
 
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/confirm/${selectedBooking._id}`, {
         method: 'PATCH',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ room: selectedRoom._id, roomType: selectedRoom.roomType }),
@@ -117,13 +134,17 @@ function BookingLog() {
       setBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
-      setFilteredBookings(bookings.map(booking => 
+      setFilteredBookings(filteredBookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
       setIsModalOpen(false);
 
       // Update rooms status
-      const updatedRoomsResponse = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
+      const updatedRoomsResponse = await fetch('https://serenity-suites-api.vercel.app/api/rooms', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!updatedRoomsResponse.ok) {
         throw new Error('Failed to fetch updated rooms');
       }
@@ -139,8 +160,12 @@ function BookingLog() {
 
   const handleCheckIn = async (bookingId) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/checkin/${bookingId}`, {
         method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (!response.ok) {
@@ -151,7 +176,7 @@ function BookingLog() {
       setBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
-      setFilteredBookings(bookings.map(booking => 
+      setFilteredBookings(filteredBookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
       
@@ -164,8 +189,12 @@ function BookingLog() {
 
   const handleCheckOut = async (bookingId) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/checkout/${bookingId}`, {
         method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (!response.ok) {
@@ -176,12 +205,16 @@ function BookingLog() {
       setBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
-      setFilteredBookings(bookings.map(booking => 
+      setFilteredBookings(filteredBookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
 
       // Update rooms status
-      const updatedRoomsResponse = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
+      const updatedRoomsResponse = await fetch('https://serenity-suites-api.vercel.app/api/rooms', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!updatedRoomsResponse.ok) {
         throw new Error('Failed to fetch updated rooms');
       }
@@ -197,8 +230,12 @@ function BookingLog() {
 
   const handleCancelBooking = async (bookingId) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/cancel/${bookingId}`, {
         method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (!response.ok) {
@@ -209,7 +246,7 @@ function BookingLog() {
       setBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
-      setFilteredBookings(bookings.map(booking => 
+      setFilteredBookings(filteredBookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
 
