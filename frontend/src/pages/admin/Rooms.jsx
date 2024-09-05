@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaEdit, FaTrash, FaCheck, FaTimes, FaCalendarAlt, FaUser, FaBed, FaExclamationTriangle, FaCalendarPlus, FaDollarSign, FaUsers, FaConciergeBell } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaCheck, FaTimes, FaCalendarAlt, FaUser, FaBed, FaExclamationTriangle, FaCalendarPlus, FaDollarSign, FaUsers, FaConciergeBell, FaBroom, FaTools, FaBan, FaHotel, FaBuilding, FaKey } from 'react-icons/fa';
 
 function Rooms() {
   const [activeFloor, setActiveFloor] = useState(1);
@@ -57,7 +57,7 @@ function Rooms() {
 
   const handleStatusChange = async (roomId, newStatus) => {
     try {
-      const response = await fetch(`https://serenity-suites-api.vercel.app/api/rooms/${roomId}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/rooms/${roomId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -85,17 +85,43 @@ function Rooms() {
     }
   };
 
-  const handleMaintenanceRequest = (roomId) => {
-    console.log(`Maintenance requested for room ${roomId}`);
-  };
-
-  const handleExtendBooking = (roomId) => {
-    console.log(`Extend booking requested for room ${roomId}`);
-  };
-
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'available':
+        return 'bg-green-200 text-green-800';
+      case 'booked':
+        return 'bg-blue-200 text-blue-800';
+      case 'maintenance':
+        return 'bg-yellow-200 text-yellow-800';
+      case 'cleaning':
+        return 'bg-purple-200 text-purple-800';
+      case 'out of service':
+        return 'bg-red-200 text-red-800';
+      default:
+        return 'bg-gray-200 text-gray-800';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'available':
+        return <FaCheck className="inline-block mr-1" />;
+      case 'booked':
+        return <FaUser className="inline-block mr-1" />;
+      case 'maintenance':
+        return <FaTools className="inline-block mr-1" />;
+      case 'cleaning':
+        return <FaBroom className="inline-block mr-1" />;
+      case 'out of service':
+        return <FaBan className="inline-block mr-1" />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -105,7 +131,7 @@ function Rooms() {
       animate="visible"
       variants={fadeInUp}
     >
-      <h2 className="text-3xl font-bold mb-6 text-emerald-800">Manage Rooms</h2>
+      <h2 className="text-3xl font-bold mb-6 text-emerald-800"><FaHotel className="inline-block mr-2" />Manage Rooms</h2>
       <div className="mb-6">
         <div className="flex space-x-2">
           {Object.keys(rooms).map((floor) => (
@@ -118,6 +144,7 @@ function Rooms() {
               }`}
               onClick={() => setActiveFloor(parseInt(floor))}
             >
+              <FaBuilding className="inline-block mr-1" />
               Floor {floor}
             </button>
           ))}
@@ -131,9 +158,9 @@ function Rooms() {
           {rooms[activeFloor] && rooms[activeFloor].map((room) => (
             <motion.div 
               key={room._id} 
-              className={`bg-white shadow-md rounded-lg overflow-hidden cursor-pointer border border-gray-200 ${
+              className={`shadow-md rounded-lg overflow-hidden cursor-pointer border border-gray-200 ${
                 room.status === 'available' ? 'hover:shadow-lg' : ''
-              }`}
+              } ${getStatusColor(room.status)} flex flex-col h-[210px] relative`}
               whileHover={{ scale: 1.03 }}
               onClick={() => handleRoomClick(room)}
               layout
@@ -142,24 +169,25 @@ function Rooms() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">Room {room.roomNumber}</h3>
-                <p className="text-gray-600 mb-2">{room.roomType.roomName}</p>
-                <div className={`inline-block px-2 py-1 rounded-full text-xs ${
-                  room.status === 'available' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
-                }`}>
-                  {room.status}
-                </div>
+              <div className="p-6 flex-grow">
+                <h3 className="text-xl font-semibold mb-2"><FaKey className="inline-block mr-2" />Room {room.roomNumber}</h3>
+                <p className="mb-2"><FaBed className="inline-block mr-2" />{room.roomType.roomName}</p>
 
                 {bookings.map((booking) => (
                   booking.roomNumber === room.roomNumber && (
-                    <div key={booking._id} className="mt-4">
-                      <p className="text-sm text-gray-600">Booked Guest:</p>
-                      <p className="text-sm">{booking.firstName} {booking.lastName}</p>
-                      <p className="text-sm">{new Date(booking.checkInDate).toLocaleDateString()} - {new Date(booking.checkOutDate).toLocaleDateString()}</p>
+                    <div key={booking._id} className="mt-2">
+                      <p className="text-sm"><FaUser className="inline-block mr-2" />Booked Guest:</p>
+                      <p className="text-sm truncate">{booking.firstName} {booking.lastName}</p>
+                      <p className="text-sm"><FaCalendarAlt className="inline-block mr-2" />{new Date(booking.checkInDate).toLocaleDateString()} - {new Date(booking.checkOutDate).toLocaleDateString()}</p>
                     </div>
                   )
                 ))}
+              </div>
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                <div className={`inline-block px-2 py-1 rounded-full text-sm font-bold bg-white`}>
+                  {getStatusIcon(room.status)}
+                  {room.status.toUpperCase()}
+                </div>
               </div>
             </motion.div>
           ))}
@@ -179,9 +207,9 @@ function Rooms() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
           >
-            <h3 className="text-2xl font-bold mb-4">Room {selectedRoom.roomNumber} Details</h3>
+            <h3 className="text-2xl font-bold mb-4"><FaKey className="inline-block mr-2" />Room {selectedRoom.roomNumber} Details</h3>
             <p className="mb-2"><FaBed className="inline mr-2" />{selectedRoom.roomType.roomName}</p>
-            <p className="mb-2"><FaCalendarAlt className="inline mr-2" />Status: {selectedRoom.status}</p>
+            <p className="mb-2"><FaCalendarAlt className="inline mr-2" />Status: {selectedRoom.status.toUpperCase()}</p>
             <p className="mb-2"><FaDollarSign className="inline mr-2" />Price: ${selectedRoom.roomType.price}/night</p>
             <p className="mb-2"><FaUsers className="inline mr-2" />Capacity: {selectedRoom.roomType.capacity} persons</p>
             <p className="mb-2"><FaConciergeBell className="inline mr-2" />Amenities: {selectedRoom.roomType.amenities.join(', ')}</p>
@@ -196,32 +224,43 @@ function Rooms() {
               )
             ))}
             <div className="mt-6 flex flex-wrap justify-between">
-              <button
-                className="px-4 py-2 mb-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors"
-                onClick={() => handleStatusChange(selectedRoom._id, selectedRoom.status === 'available' ? 'booked' : 'available')}
-              >
-                {selectedRoom.status === 'available' ? 'Mark as Booked' : 'Mark as Available'}
-              </button>
-              <button
-                className="px-4 py-2 mb-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
-                onClick={() => handleMaintenanceRequest(selectedRoom._id)}
-              >
-                <FaExclamationTriangle className="inline mr-2" />
-                Maintenance
-              </button>
-              {selectedRoom.status === 'booked' && (
-                <button
-                  className="px-4 py-2 mb-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                  onClick={() => handleExtendBooking(selectedRoom._id)}
-                >
-                  <FaCalendarPlus className="inline mr-2" />
-                  Extend Booking
-                </button>
+              {selectedRoom.status !== 'booked' && (
+                <>
+                  <button
+                    className="px-4 py-2 mb-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
+                    onClick={() => handleStatusChange(selectedRoom._id, 'maintenance')}
+                  >
+                    <FaTools className="inline mr-2" />
+                    Maintenance
+                  </button>
+                  <button
+                    className="px-4 py-2 mb-2 bg-purple-500 text-white rounded hover:bg-blue-600 transition-colors"
+                    onClick={() => handleStatusChange(selectedRoom._id, 'cleaning')}
+                  >
+                    <FaBroom className="inline mr-2" />
+                    Cleaning
+                  </button>
+                  <button
+                    className="px-4 py-2 mb-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                    onClick={() => handleStatusChange(selectedRoom._id, 'out of service')}
+                  >
+                    <FaBan className="inline mr-2" />
+                    Out of Service
+                  </button>
+                  <button
+                    className="px-4 py-2 mb-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                    onClick={() => handleStatusChange(selectedRoom._id, 'available')}
+                  >
+                    <FaCheck className="inline mr-2" />
+                    Available
+                  </button>
+                </>
               )}
               <button
                 className="px-4 py-2 mb-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
                 onClick={handleCloseModal}
               >
+                <FaTimes className="inline mr-2" />
                 Close
               </button>
             </div>

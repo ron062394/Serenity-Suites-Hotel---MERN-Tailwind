@@ -346,7 +346,7 @@ function BookingLog() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg max-w-lg w-full">
             <h3 className="text-lg font-bold mb-4">Assign Room to {selectedBooking.name}</h3>
-            <p className="mb-4">Requested Room Type: {selectedBooking.roomType || 'Not specified'}</p>
+            <p className="mb-4">Requested Room Type: {selectedBooking.roomName || 'Not specified'}</p>
             <div className="mb-4">
               <div className="flex flex-wrap gap-2">
                 {[1, 2, 3, 4, 5].map((floor) => (
