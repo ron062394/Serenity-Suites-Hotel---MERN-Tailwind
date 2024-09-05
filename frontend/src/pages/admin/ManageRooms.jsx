@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck, FaTimes as FaCross } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaCheck, FaTimes as FaCross, FaHotel, FaBuilding, FaKey, FaBed, FaCalendarAlt, FaUser, FaExclamationTriangle, FaCalendarPlus, FaDollarSign, FaUsers, FaConciergeBell, FaBroom, FaTools, FaBan } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ManageRooms() {
   const [activeFloor, setActiveFloor] = useState(1);
@@ -49,6 +51,7 @@ function ManageRooms() {
       setExistingRoomNumbers(data.map(room => room.roomNumber));
     } catch (error) {
       console.error('Error fetching rooms:', error);
+      toast.error('Failed to fetch rooms');
     }
   };
 
@@ -62,6 +65,7 @@ function ManageRooms() {
       setRoomTypes(data);
     } catch (error) {
       console.error('Error fetching room types:', error);
+      toast.error('Failed to fetch room types');
     }
   };
 
@@ -86,8 +90,10 @@ function ManageRooms() {
         throw new Error('Failed to delete room');
       }
       fetchRooms(); // Refresh the rooms list
+      toast.success('Room deleted successfully');
     } catch (error) {
       console.error('Error deleting room:', error);
+      toast.error('Failed to delete room');
     }
   };
 
@@ -118,7 +124,7 @@ function ManageRooms() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (existingRoomNumbers.includes(newRoom.roomNumber) && !isEditMode) {
-      alert('Room number already exists. Please choose a different room number.');
+      toast.error('Room number already exists. Please choose a different room number.');
       return;
     }
     console.log('New room:', newRoom);
@@ -137,9 +143,11 @@ function ManageRooms() {
       }
       handleCloseModal();
       fetchRooms(); // Refresh the rooms list
+      toast.success(`Room ${isEditMode ? 'updated' : 'added'} successfully`);
       
     } catch (error) {
       console.error(`Error ${isEditMode ? 'updating' : 'adding'} room:`, error.message);
+      toast.error(`Failed to ${isEditMode ? 'update' : 'add'} room`);
     }
   };
 
@@ -150,12 +158,13 @@ function ManageRooms() {
 
   return (
     <motion.div 
-      className="container mx-auto p-6"
+      className="container mx-auto px-4 py-8"
       initial="hidden"
       animate="visible"
       variants={fadeInUp}
     >
-      <h2 className="text-3xl font-bold mb-6 text-emerald-800">Manage Rooms</h2>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <h2 className="text-4xl font-bold mb-8 text-emerald-800"><FaHotel className="inline-block mr-2" />Manage Rooms</h2>
       <div className="mb-6">
         <div className="flex space-x-2">
           {Object.keys(rooms).map((floor) => (
@@ -168,13 +177,14 @@ function ManageRooms() {
               }`}
               onClick={() => setActiveFloor(parseInt(floor))}
             >
+              <FaBuilding className="inline-block mr-1" />
               Floor {floor}
             </button>
           ))}
         </div>
       </div>
       <motion.button
-        className="mb-4 bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors duration-300 flex items-center"
+        className="mb-4 bg-emerald-600 text-white px-4 py-2 rounded-full hover:bg-emerald-700 transition-colors shadow-lg flex items-center"
         onClick={handleAddRoom}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -182,43 +192,59 @@ function ManageRooms() {
         <FaPlus className="mr-2" /> Add New Room
       </motion.button>
       <div className="overflow-x-auto">
-        <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-emerald-600 text-white">
-            <tr>
-              <th className="py-3 px-4 text-left">Room Number</th>
-              <th className="py-3 px-4 text-left">Floor</th>
-              <th className="py-3 px-4 text-left">Type</th>
-              <th className="py-3 px-4 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rooms[activeFloor] && rooms[activeFloor].map((room) => (
-              <motion.tr 
-                key={room._id}
-                className="border-b border-gray-200 hover:bg-gray-100"
-                whileHover={{ scale: 1.01 }}
-              >
-                <td className="py-3 px-4">{room.roomNumber}</td>
-                <td className="py-3 px-4">{room.floor}</td>
-                <td className="py-3 px-4">{room.roomType && room.roomType.roomName}</td>
-                <td className="py-3 px-4">
-                  <button
-                    onClick={() => handleEdit(room)}
-                    className="text-blue-600 hover:text-blue-800 mr-2"
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white shadow-xl rounded-lg overflow-hidden"
+        >
+          <table className="w-full">
+            <thead className="bg-emerald-800 text-white">
+              <tr>
+                <th className="py-3 px-4 text-left"><FaKey className="inline-block mr-2" />Room Number</th>
+                <th className="py-3 px-4 text-left"><FaBuilding className="inline-block mr-2" />Floor</th>
+                <th className="py-3 px-4 text-left"><FaBed className="inline-block mr-2" />Type</th>
+                <th className="py-3 px-4 text-left"><FaTools className="inline-block mr-2" />Actions</th>
+              </tr>
+            </thead>
+            <tbody className="text-left">
+              <AnimatePresence>
+                {rooms[activeFloor] && rooms[activeFloor].map((room) => (
+                  <motion.tr 
+                    key={room._id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="border-b border-gray-200 hover:bg-emerald-50"
                   >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(room._id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+                    <td className="py-3 px-4"><FaKey className="inline-block mr-2" />{room.roomNumber}</td>
+                    <td className="py-3 px-4"><FaBuilding className="inline-block mr-2" />{room.floor}</td>
+                    <td className="py-3 px-4"><FaBed className="inline-block mr-2" />{room.roomType && room.roomType.roomName}</td>
+                    <td className="py-3 px-4">
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => handleEdit(room)}
+                        className="text-blue-600 hover:text-blue-800 mr-3"
+                      >
+                        <FaEdit className="inline-block" />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => handleDelete(room._id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <FaTrash className="inline-block" />
+                      </motion.button>
+                    </td>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </motion.div>
       </div>
 
       <AnimatePresence>
@@ -230,13 +256,13 @@ function ManageRooms() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-white p-8 rounded-lg w-96"
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -50, opacity: 0 }}
+              className="bg-white p-8 rounded-lg w-96 shadow-2xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
             >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold">{isEditMode ? 'Edit Room' : 'Add New Room'}</h3>
+                <h3 className="text-2xl font-bold text-emerald-800">{isEditMode ? 'Edit Room' : 'Add New Room'}</h3>
                 <button onClick={handleCloseModal} className="text-gray-500 hover:text-gray-700">
                   <FaTimes />
                 </button>
@@ -244,11 +270,11 @@ function ManageRooms() {
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="roomNumber">
-                    Room Number
+                    <FaKey className="inline-block mr-2" />Room Number
                   </label>
                   <div className="relative">
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       id="roomNumber"
                       type="text"
                       name="roomNumber"
@@ -269,10 +295,10 @@ function ManageRooms() {
                 </div>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="floor">
-                    Floor
+                    <FaBuilding className="inline-block mr-2" />Floor
                   </label>
                   <select
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     id="floor"
                     name="floor"
                     value={newRoom.floor}
@@ -287,10 +313,10 @@ function ManageRooms() {
                 </div>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="roomType">
-                    Room Type
+                    <FaBed className="inline-block mr-2" />Room Type
                   </label>
                   <select
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     id="roomType"
                     name="roomType"
                     value={newRoom.roomType}
@@ -304,12 +330,23 @@ function ManageRooms() {
                   </select>
                 </div>
                 <div className="flex items-center justify-between">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit"
                   >
                     {isEditMode ? 'Update Room' : 'Add Room'}
-                  </button>
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                    onClick={handleCloseModal}
+                  >
+                    Cancel
+                  </motion.button>
                 </div>
               </form>
             </motion.div>

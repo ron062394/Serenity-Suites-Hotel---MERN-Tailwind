@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaEdit, FaTrash, FaCheck, FaTimes, FaCalendarAlt, FaUser, FaBed, FaExclamationTriangle, FaCalendarPlus, FaDollarSign, FaUsers, FaConciergeBell, FaBroom, FaTools, FaBan, FaHotel, FaBuilding, FaKey } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Rooms() {
   const [activeFloor, setActiveFloor] = useState(1);
@@ -27,6 +29,7 @@ function Rooms() {
         setRooms(roomsByFloor);
       } catch (error) {
         console.error('Error fetching rooms:', error);
+        toast.error('Failed to fetch rooms');
       }
     };
 
@@ -40,6 +43,7 @@ function Rooms() {
         setBookings(data);
       } catch (error) {
         console.error('Error fetching bookings:', error);
+        toast.error('Failed to fetch bookings');
       }
     };
 
@@ -80,8 +84,10 @@ function Rooms() {
         });
         return updatedRooms;
       });
+      toast.success('Room status updated successfully');
     } catch (error) {
       console.error('Error updating room status:', error);
+      toast.error('Failed to update room status');
     }
   };
 
@@ -131,6 +137,7 @@ function Rooms() {
       animate="visible"
       variants={fadeInUp}
     >
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
       <h2 className="text-3xl font-bold mb-6 text-emerald-800"><FaHotel className="inline-block mr-2" />Manage Rooms</h2>
       <div className="mb-6">
         <div className="flex space-x-2">
@@ -234,7 +241,7 @@ function Rooms() {
                     Maintenance
                   </button>
                   <button
-                    className="px-4 py-2 mb-2 bg-purple-500 text-white rounded hover:bg-blue-600 transition-colors"
+                    className="px-4 py-2 mb-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
                     onClick={() => handleStatusChange(selectedRoom._id, 'cleaning')}
                   >
                     <FaBroom className="inline mr-2" />

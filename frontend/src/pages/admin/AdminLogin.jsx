@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaLock, FaUser } from 'react-icons/fa';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+  const { dispatch } = useAuthContext();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -27,6 +29,7 @@ function AdminLogin() {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
+        dispatch({ type: 'LOGIN', payload: data.user });
         navigate('/admin/');
       } else {
         setError(data.error || 'Login failed');

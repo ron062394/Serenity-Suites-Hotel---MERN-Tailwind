@@ -9,6 +9,7 @@ import ManageUsers from './ManageUsers';
 import Notifications from './Notifications';
 import BookingLog from './BookingLog';
 import RoomType from './RoomType';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 function AdminDashboard() {
   const [selectedTab, setSelectedTab] = useState('overview');
@@ -17,7 +18,8 @@ function AdminDashboard() {
   const [checkedInGuests, setCheckedInGuests] = useState(0);
   const [recentNotifications, setRecentNotifications] = useState([]);
   const navigate = useNavigate();
-
+  const { dispatch } = useAuthContext();
+  
   useEffect(() => {
     // Simulating API call to fetch revenue data
     const fetchRevenueData = () => {
@@ -69,6 +71,7 @@ function AdminDashboard() {
   };
 
   const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' });
     // Implement logout logic here
     // For example, clear local storage, reset auth state, etc.
     navigate('/admin/login'); // Redirect to admin login page
@@ -79,7 +82,10 @@ function AdminDashboard() {
       case 'overview':
         return (
           <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-            <h3 className="text-3xl font-bold mb-6 text-gray-800">Overview</h3>
+            <h3 className="text-3xl font-bold mb-6 text-gray-800 flex items-center justify-center">
+              <FaTachometerAlt className="mr-2" />
+              Overview
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
               {[
                 { title: 'Total Bookings', value: '1,234', icon: <FaCalendarAlt className="text-emerald-500" /> },

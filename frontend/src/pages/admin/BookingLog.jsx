@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaSearch, FaBed, FaCheckCircle, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaBed, FaCheckCircle, FaSignOutAlt, FaTimes, FaCalendarAlt, FaUser, FaHotel, FaIdCard, FaCalendarCheck, FaCalendarTimes, FaClipboardList, FaClock, FaCommentAlt, FaCog } from 'react-icons/fa';
 import BookDetails from './BookDetails';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function BookingLog() {
   const [bookings, setBookings] = useState([]);
@@ -31,7 +33,7 @@ function BookingLog() {
         console.log('Bookings data:', data);
       } catch (error) {
         console.error('Error fetching bookings:', error);
-        // Handle error (e.g., show error message to user)
+        toast.error('Failed to fetch bookings');
       }
     };
 
@@ -47,7 +49,7 @@ function BookingLog() {
         console.log('Rooms data:', data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
-        // Handle error (e.g., show error message to user)
+        toast.error('Failed to fetch rooms');
       }
     };
 
@@ -128,9 +130,10 @@ function BookingLog() {
       const updatedRooms = await updatedRoomsResponse.json();
       setRooms(updatedRooms);
 
+      toast.success('Room assigned successfully');
     } catch (error) {
       console.error('Error assigning room and confirming booking:', error);
-      // Handle error (e.g., show error message to user)
+      toast.error('Failed to assign room');
     }
   };
 
@@ -152,9 +155,10 @@ function BookingLog() {
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
       
+      toast.success('Guest checked in successfully');
     } catch (error) {
       console.error('Error checking in guest:', error);
-      // Handle error (e.g., show error message to user)
+      toast.error('Failed to check in guest');
     }
   };
 
@@ -183,9 +187,11 @@ function BookingLog() {
       }
       const updatedRooms = await updatedRoomsResponse.json();
       setRooms(updatedRooms);
+
+      toast.success('Guest checked out successfully');
     } catch (error) {
       console.error('Error checking out guest:', error);
-      // Handle error (e.g., show error message to user)
+      toast.error('Failed to check out guest');
     }
   };
 
@@ -206,9 +212,11 @@ function BookingLog() {
       setFilteredBookings(bookings.map(booking => 
         booking._id === updatedBooking.booking._id ? updatedBooking.booking : booking
       ));
+
+      toast.success('Booking cancelled successfully');
     } catch (error) {
       console.error('Error canceling booking:', error);
-      // Handle error (e.g., show error message to user)
+      toast.error('Failed to cancel booking');
     }
   };
 
@@ -229,7 +237,8 @@ function BookingLog() {
       animate="visible"
       variants={fadeInUp}
     >
-      <h2 className="text-3xl font-bold mb-6 text-emerald-800">Booking Log</h2>
+      <ToastContainer />
+      <h2 className="text-3xl font-bold mb-6 text-emerald-800"><FaClipboardList className="inline-block mr-2" />Booking Log</h2>
       <div className="mb-6 flex flex-wrap items-center gap-4">
         <div className="relative flex-grow">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -244,18 +253,18 @@ function BookingLog() {
       </div>
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-emerald-600 text-white">
+          <thead className="bg-emerald-800 text-white">
             <tr>
-              <th className="py-3 px-4 text-left">Booking ID</th>
-              <th className="py-3 px-4 text-left">Guest Name</th>
-              <th className="py-3 px-4 text-left">Room Number</th>
-              <th className="py-3 px-4 text-left">Room Type</th>
-              <th className="py-3 px-4 text-left">Check-In</th>
-              <th className="py-3 px-4 text-left">Check-Out</th>
-              <th className="py-3 px-4 text-left">Status</th>
-              <th className="py-3 px-4 text-left">Created At</th>
-              <th className="py-3 px-4 text-left">Special Requests</th>
-              <th className="py-3 px-4 text-left">Actions</th>
+              <th className="py-3 px-4 text-left"><FaIdCard className="inline-block mr-2" />Booking ID</th>
+              <th className="py-3 px-4 text-left"><FaUser className="inline-block mr-2" />Guest Name</th>
+              <th className="py-3 px-4 text-left"><FaHotel className="inline-block mr-2" />Room Number</th>
+              <th className="py-3 px-4 text-left"><FaBed className="inline-block mr-2" />Room Type</th>
+              <th className="py-3 px-4 text-left"><FaCalendarCheck className="inline-block mr-2" />Check-In</th>
+              <th className="py-3 px-4 text-left"><FaCalendarTimes className="inline-block mr-2" />Check-Out</th>
+              <th className="py-3 px-4 text-left"><FaClipboardList className="inline-block mr-2" />Status</th>
+              <th className="py-3 px-4 text-left"><FaClock className="inline-block mr-2" />Created At</th>
+              <th className="py-3 px-4 text-left"><FaCommentAlt className="inline-block mr-2" />Special Requests</th>
+              <th className="py-3 px-4 text-left"><FaCog className="inline-block mr-2" />Actions</th>
             </tr>
           </thead>
           <tbody>

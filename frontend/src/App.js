@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
+import { AuthContextProvider } from './context/AuthContext';
+import { useAuthContext } from './hooks/useAuthContext';
 
 // Styles
 import './App.css';
@@ -22,15 +24,27 @@ import RoomDetails from './pages/user/RoomDetails';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
-import ManageRooms from './pages/admin/ManageRooms';
-import ManageUsers from './pages/admin/ManageUsers';
-import Notifications from './pages/admin/Notifications';
 import AdminLogin from './pages/admin/AdminLogin';
 
+function ProtectedRoute({ children }) {
+  const { user } = useAuthContext();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  }
+
+  if (user.role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
 
 function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const { user } = useAuthContext();
 
   return (
     <div className="App bg-black min-h-screen flex flex-col">
@@ -50,11 +64,12 @@ function AppContent() {
           <Route path="/rooms/:id" element={<RoomDetails />} />
 
           {/* Admin Routes */}
-          <Route path="/admin/" element={<AdminDashboard />} />
-          <Route path="/admin/manage-rooms" element={<ManageRooms />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/manage-users" element={<ManageUsers />} />
-          <Route path="/admin/notifications" element={<Notifications />} />
+          <Route path="/admin/*" element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/login" element={user && user.role === 'admin' ? <Navigate to="/admin" replace /> : <AdminLogin />} />
         </Routes>
       </main>
       {!isAdminRoute && <Footer />}
@@ -64,9 +79,11 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthContextProvider>
   );
 }
 

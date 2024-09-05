@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaEdit, FaTrash, FaPlus, FaTimes, FaImage } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaPlus, FaTimes, FaImage, FaBed, FaDollarSign, FaUsers, FaConciergeBell, FaHotel, FaCheck } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function RoomType() {
   const [roomTypes, setRoomTypes] = useState([]);
@@ -26,6 +28,7 @@ function RoomType() {
       setRoomTypes(data);
     } catch (error) {
       console.error('Error fetching room types:', error);
+      toast.error('Failed to fetch room types');
     }
   };
 
@@ -55,8 +58,10 @@ function RoomType() {
       setNewRoomType({ roomName: '', description: '', price: '', capacity: '', amenities: [], images: [] });
       setEditingId(null);
       setIsModalOpen(false);
+      toast.success(editingId ? 'Room type updated successfully' : 'Room type added successfully');
     } catch (error) {
       console.error('Error saving room type:', error);
+      toast.error('Failed to save room type');
     }
   };
 
@@ -82,8 +87,10 @@ function RoomType() {
         throw new Error('Failed to delete room type');
       }
       fetchRoomTypes();
+      toast.success('Room type deleted successfully');
     } catch (error) {
       console.error('Error deleting room type:', error);
+      toast.error('Failed to delete room type');
     }
   };
 
@@ -126,14 +133,20 @@ function RoomType() {
       transition={{ duration: 0.5 }}
       className="container mx-auto p-6"
     >
-      <h2 className="text-3xl font-bold mb-6">Manage Room Types</h2>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <h2 className="text-4xl font-bold mb-8 text-emerald-800"><FaHotel className="inline-block mr-2" />Manage Room Types</h2>
       
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4 flex items-center"
-      >
-        <FaPlus className="mr-2" /> Add New Room Type
-      </button>
+      <div className="flex justify-start mb-4">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsModalOpen(true)}
+          className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition-colors shadow-lg"
+        >
+          <FaPlus className="mr-2" />
+          <span>Add New Room Type</span>
+        </motion.button>
+      </div>
 
       <AnimatePresence>
         {isModalOpen && (
@@ -159,10 +172,10 @@ function RoomType() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="roomName">
-                      Room Type Name
+                      <FaBed className="inline-block mr-2" />Room Type Name
                     </label>
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       id="roomName"
                       type="text"
                       name="roomName"
@@ -173,10 +186,10 @@ function RoomType() {
                   </div>
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">
-                      Price
+                      <FaDollarSign className="inline-block mr-2" />Price
                     </label>
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       id="price"
                       type="number"
                       name="price"
@@ -190,7 +203,7 @@ function RoomType() {
                       Description
                     </label>
                     <textarea
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       id="description"
                       name="description"
                       value={newRoomType.description}
@@ -201,10 +214,10 @@ function RoomType() {
                   </div>
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="capacity">
-                      Capacity
+                      <FaUsers className="inline-block mr-2" />Capacity
                     </label>
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       id="capacity"
                       type="number"
                       name="capacity"
@@ -215,11 +228,11 @@ function RoomType() {
                   </div>
                   <div className="mb-4 md:col-span-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="images">
-                      Images
+                      <FaImage className="inline-block mr-2" />Images
                     </label>
                     <div className="flex items-center mb-2">
                       <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 mr-2"
                         type="text"
                         value={newImage}
                         onChange={(e) => setNewImage(e.target.value)}
@@ -228,7 +241,7 @@ function RoomType() {
                       <button
                         type="button"
                         onClick={handleAddImage}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded flex items-center"
                       >
                         <FaPlus className="mr-2" /> Add
                       </button>
@@ -250,7 +263,7 @@ function RoomType() {
                   </div>
                   <div className="mb-4 md:col-span-2">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amenities">
-                      Amenities
+                      <FaConciergeBell className="inline-block mr-2" />Amenities
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                       {suggestedAmenities.map((amenity) => (
@@ -267,7 +280,7 @@ function RoomType() {
                     </div>
                     <div className="flex mt-2">
                       <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500 mr-2"
                         type="text"
                         value={newAmenity}
                         onChange={(e) => setNewAmenity(e.target.value)}
@@ -276,7 +289,7 @@ function RoomType() {
                       <button
                         type="button"
                         onClick={handleAddCustomAmenity}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded flex items-center"
                       >
                         <FaPlus className="mr-2" /> Add
                       </button>
@@ -298,10 +311,10 @@ function RoomType() {
                   </div>
                 </div>
                 <button
-                  className="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   type="submit"
                 >
-                  {editingId ? 'Update' : 'Add'} Room Type
+                  <FaCheck className="inline-block mr-2" />{editingId ? 'Update' : 'Add'} Room Type
                 </button>
               </form>
             </motion.div>
@@ -309,13 +322,11 @@ function RoomType() {
         )}
       </AnimatePresence>
 
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-gray-300">
-        <h3 className="text-xl font-bold mb-4">Existing Room Types</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {roomTypes.map((roomType) => (
             <div key={roomType._id} className="bg-gray-100 rounded-lg p-4 shadow border border-gray-300 hover:bg-gray-200 transition-colors duration-200">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="text-lg font-semibold">{roomType.roomName}</h4>
+                <h3 className="text-lg font-semibold"><FaBed className="inline-block mr-2" />{roomType.roomName}</h3>
                 <div>
                   <button
                     onClick={() => handleEdit(roomType)}
@@ -352,7 +363,6 @@ function RoomType() {
             </div>
           ))}
         </div>
-      </div>
     </motion.div>
   );
 }
