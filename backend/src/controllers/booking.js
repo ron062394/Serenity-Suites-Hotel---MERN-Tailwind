@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Room = require('../models/Room');
-const BookRequest = require('../models/Booking');
+const Room = require('../models/room');
+const BookRequest = require('../models/booking');
 const RoomType = require('../models/roomType');
 
 // Create a new booking request
