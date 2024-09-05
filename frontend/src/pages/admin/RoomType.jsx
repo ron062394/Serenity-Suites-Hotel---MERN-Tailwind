@@ -18,7 +18,7 @@ function RoomType() {
 
   const fetchRoomTypes = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/roomTypes');
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/roomTypes');
       if (!response.ok) {
         throw new Error('Failed to fetch room types');
       }
@@ -38,8 +38,8 @@ function RoomType() {
     e.preventDefault();
     try {
       const url = editingId
-        ? `http://localhost:3001/api/roomTypes/${editingId}`
-        : 'http://localhost:3001/api/roomTypes';
+        ? `https://serenity-suites-api.vercel.app/api/roomTypes/${editingId}`
+        : 'https://serenity-suites-api.vercel.app/api/roomTypes';
       const method = editingId ? 'PATCH' : 'POST';
       const response = await fetch(url, {
         method: method,
@@ -75,7 +75,7 @@ function RoomType() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/roomTypes/${id}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/roomTypes/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {

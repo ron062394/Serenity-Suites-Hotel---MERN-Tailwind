@@ -11,7 +11,7 @@ function Rooms() {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/rooms');
+        const response = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
         if (!response.ok) {
           throw new Error('Failed to fetch rooms');
         }
@@ -32,7 +32,7 @@ function Rooms() {
 
     const fetchBookings = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/bookings/available');
+        const response = await fetch('https://serenity-suites-api.vercel.app/api/bookings/available');
         if (!response.ok) {
           throw new Error('Failed to fetch bookings');
         }
@@ -57,7 +57,7 @@ function Rooms() {
 
   const handleStatusChange = async (roomId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/rooms/${roomId}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/rooms/${roomId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

@@ -67,7 +67,7 @@ function Booking() {
   useEffect(() => {
     const fetchRoomTypes = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/roomTypes');
+        const response = await fetch('https://serenity-suites-api.vercel.app/api/roomTypes');
         if (!response.ok) {
           throw new Error('Failed to fetch room types');
         }
@@ -126,7 +126,7 @@ function Booking() {
 
   const handleBooking = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/bookings', {
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/bookings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

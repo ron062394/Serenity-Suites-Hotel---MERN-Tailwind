@@ -21,7 +21,7 @@ function BookingLog() {
     // Fetch bookings from API
     const fetchBookings = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/bookings/ascending');
+        const response = await fetch('https://serenity-suites-api.vercel.app/api/bookings/ascending');
         if (!response.ok) {
           throw new Error('Failed to fetch bookings');
         }
@@ -38,7 +38,7 @@ function BookingLog() {
     // Fetch rooms from API
     const fetchRooms = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/rooms');
+        const response = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
         if (!response.ok) {
           throw new Error('Failed to fetch rooms');
         }
@@ -99,7 +99,7 @@ function BookingLog() {
     if (!selectedRoom) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/bookings/confirm/${selectedBooking._id}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/confirm/${selectedBooking._id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ function BookingLog() {
       setIsModalOpen(false);
 
       // Update rooms status
-      const updatedRoomsResponse = await fetch('http://localhost:3001/api/rooms');
+      const updatedRoomsResponse = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
       if (!updatedRoomsResponse.ok) {
         throw new Error('Failed to fetch updated rooms');
       }
@@ -136,7 +136,7 @@ function BookingLog() {
 
   const handleCheckIn = async (bookingId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/bookings/checkin/${bookingId}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/checkin/${bookingId}`, {
         method: 'PATCH',
       });
 
@@ -160,7 +160,7 @@ function BookingLog() {
 
   const handleCheckOut = async (bookingId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/bookings/checkout/${bookingId}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/checkout/${bookingId}`, {
         method: 'PATCH',
       });
 
@@ -177,7 +177,7 @@ function BookingLog() {
       ));
 
       // Update rooms status
-      const updatedRoomsResponse = await fetch('http://localhost:3001/api/rooms');
+      const updatedRoomsResponse = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
       if (!updatedRoomsResponse.ok) {
         throw new Error('Failed to fetch updated rooms');
       }
@@ -191,7 +191,7 @@ function BookingLog() {
 
   const handleCancelBooking = async (bookingId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/bookings/cancel/${bookingId}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/bookings/cancel/${bookingId}`, {
         method: 'PATCH',
       });
 

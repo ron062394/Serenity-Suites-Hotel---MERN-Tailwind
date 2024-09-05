@@ -8,7 +8,7 @@ function Rooms() {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/roomTypes');
+        const response = await fetch('https://serenity-suites-api.vercel.app/api/roomTypes');
         if (!response.ok) {
           throw new Error('Failed to fetch room types');
         }

@@ -29,7 +29,7 @@ function ManageRooms() {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/rooms');
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/rooms');
       if (!response.ok) {
         throw new Error('Failed to fetch rooms');
       }
@@ -54,7 +54,7 @@ function ManageRooms() {
 
   const fetchRoomTypes = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/roomTypes');
+      const response = await fetch('https://serenity-suites-api.vercel.app/api/roomTypes');
       if (!response.ok) {
         throw new Error('Failed to fetch room types');
       }
@@ -79,7 +79,7 @@ function ManageRooms() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/rooms/${id}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/rooms/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -124,7 +124,7 @@ function ManageRooms() {
     console.log('New room:', newRoom);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/rooms${isEditMode ? `/${editRoomId}` : ''}`, {
+      const response = await fetch(`https://serenity-suites-api.vercel.app/api/rooms${isEditMode ? `/${editRoomId}` : ''}`, {
         method: isEditMode ? 'PATCH' : 'POST',
         headers: {
           "Content-Type": "application/json",
