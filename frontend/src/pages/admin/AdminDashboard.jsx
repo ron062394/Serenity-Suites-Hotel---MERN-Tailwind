@@ -182,12 +182,12 @@ function AdminDashboard() {
         <ul className="space-y-4">
           {[
             { name: 'Overview', icon: <FaTachometerAlt />, tab: 'overview' },
+            { name: 'Booking Log', icon: <FaBook />, tab: 'bookinglog' },
             { name: 'Rooms', icon: <FaCalendarAlt />, tab: 'bookings' },
             { name: 'Manage Rooms', icon: <FaHotel />, tab: 'rooms' },
             { name: 'Room Types', icon: <FaBed />, tab: 'roomtype' },
             { name: 'Users', icon: <FaUsers />, tab: 'users' },
             { name: 'Notifications', icon: <FaBell />, tab: 'notifications' },
-            { name: 'Booking Log', icon: <FaBook />, tab: 'bookinglog' },
           ].map((item) => (
             <li key={item.tab}>
               <button
