@@ -25,7 +25,7 @@ router.get('/available', authMiddleware, getAllAvailableBookings);
 router.get('/ascending', authMiddleware, getAllBookingsAscending);
 
 // Get a specific booking request by ID
-router.get('/:id', authMiddleware, getBookRequestById);
+router.get('/:id', getBookRequestById);
 
 // Update a booking request by ID
 router.patch('/:id', authMiddleware, updateBookRequest);
