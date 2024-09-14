@@ -21,7 +21,6 @@ function RoomDetails() {
         console.error('Error fetching room details:', error);
       }
     };
-
     fetchRoomDetails();
   }, [id]);
 
@@ -35,7 +34,7 @@ function RoomDetails() {
   }
 
   return (
-    <div className="bg-gray-50 relative min-h-screen pt-24"> {/* Added mt-16 for top margin */}
+    <div className="bg-gray-50 relative min-h-screen pt-24">
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed"
         style={{
