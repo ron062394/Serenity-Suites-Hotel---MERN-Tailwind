@@ -16,7 +16,7 @@ router.post('/', authMiddleware, createRoomType);
 router.get('/', getAllRoomTypes);
 
 // Get a single room type by ID
-router.get('/:id', authMiddleware, getRoomTypeById);
+router.get('/:id', getRoomTypeById);
 
 // Update a room type
 router.patch('/:id', authMiddleware, updateRoomType);
